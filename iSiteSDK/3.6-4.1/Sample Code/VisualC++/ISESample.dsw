@@ -1,0 +1,38 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "ISESample"=".\ISESample.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+    {46CF8BCA-84A1-4437-847A-DC29496E01A5}
+    {A34DB1A0-978C-4EEC-8DDA-93849CFD2B17}
+    {D765861F-36F0-4465-BD94-1B027F99E44A}
+    {D0BE2767-CD10-4B56-8795-C6BC37A8572F}
+    {368EB419-014E-4FBB-9AEB-FE47FDB6436B}
+    {11F110A2-BF9D-4795-9CE3-067740380A3F}
+    {EF53A421-0315-4622-8FBF-D995FA4D8A53}
+    {908BB23E-569C-490B-8E25-CAFDD6271D95}
+    {A8A05DD2-35E5-45B7-B5C7-934F7397475E}
+}}}
+
+###############################################################################
+

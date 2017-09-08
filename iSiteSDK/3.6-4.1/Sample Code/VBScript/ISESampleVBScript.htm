@@ -1,0 +1,186 @@
+<!-- saved from url=(0014)about:internet -->
+<html>	
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>iSite Enterprise Sample Using VBScript</title>
+
+<!--
+
+iSite Enterprise Sample
+
+This example shows the basic usage of the iSite Non-Visual and Enterprise controls.
+
+You will have to modify the code if using this sample with the Philips Backend (4.x client)
+You will need to switch the ImageSuiteURL and the Options parameters.
+
+//-->
+<SCRIPT src="../JavaScript/iSiteConfig.js" ></SCRIPT>
+
+<script language="JScript">
+    function getSiteInfo()
+    {
+        return isiteInfo;        
+    }
+</script>
+
+<SCRIPT Language="VBScript">
+<!--
+Dim   bInitialized
+
+' initialize variables
+Sub OnLoad()
+	'clear flag so we have to initialize and login again
+	bInitialized = 0
+	
+	
+    dim isiteInfo
+
+    set isiteInfo = getSiteInfo() 'transport object from JavaScript section
+
+   'Note: Change iSiteConfig.js file for your iSite settings.
+   svrip.value = isiteInfo.Server.iSyntaxServerIP
+   svrport.value = isiteInfo.Server.Port
+   svrurl.value = isiteInfo.Server.ImageSuiteURL
+   svrdsn.value = isiteInfo.Server. ImageSuiteDSN
+  
+   uname.value = isiteInfo.User.UserName
+   pword.value = isiteInfo.User.Password
+   authsource.value = isiteInfo.User.AuthSource
+	
+	
+End Sub
+
+
+Sub InitializeNonVisualCtrl()
+	' test if we are already initialized
+	If bInitialized = 0 Then
+		iSiteNonVisualCtrl.iSyntaxServerIP = svrip.value
+		iSiteNonVisualCtrl.iSyntaxServerPort = svrport.value
+		iSiteNonVisualCtrl.ImageSuiteURL = svrurl.value
+		iSiteNonVisualCtrl.ImageSuiteDSN = svrdsn.value
+
+		' Always initialize the non-visual control first
+		If iSiteNonVisualCtrl.Initialize() Then
+			bInitialized = 1
+		Else
+			MsgBox "Failed to initialize Non-visual Control."
+		End If
+	End if
+End Sub
+
+' log in and show the isite enterprise control in a dialog
+' the dailog will open the exam see the ISEDlgVBScript.htm file
+Sub OnShow(user, password, authsource)
+	Dim x
+	
+	Call InitializeNonVisualCtrl()
+	
+	' log in if we have not logged in yet, security code will be empty if not logged in.
+	If iSiteNonVisualCtrl.GetCurrentUser() <> "" Or iSiteNonVisualCtrl.Login(user,password,authsource, "", "") Then
+		' show dialog with iSiteEnterprise control
+		call showModalDialog("iSEDlgVBScript.htm",window,"status:no;resizable:yes;dialogWidth:1024px;dialogHeight:720px")
+	Else
+		MsgBox "Failed to login."
+	End If
+End Sub
+
+//-->
+</SCRIPT>
+
+</head>
+
+<body onload="OnLoad()">
+
+<p>
+ <OBJECT id=iSiteNonVisualCtrl
+	 	  CLASSID="clsid:DD0E6EAF-2822-4d42-A2CF-7FED75DA06CA"
+		  width=0%
+		  height=0%>
+	</OBJECT>  	 	
+</p>
+      
+
+<table BORDER="0" CELLPADDING="4" CELLSPACING="0" WIDTH=100% HEIGHT=100% align="center">
+<TR>
+	<table BORDER="0" CELLPADDING="4" CELLSPACING="0" WIDTH="500" align="center">
+	<TR align="center">
+		<TD><IMAGE src="saapi.bmp"></TD>	
+	</TR>
+	<TR align="center" BGCOLOR="#D4D4D4">
+		<TD HEIGHT="30"><FONT COLOR="black" SIZE="5">iSite Enterprise Sample Using VBScript</FONT></TD>
+	</TR>
+	</TABLE>
+	<TABLE BORDER="0" WIDTH="500" BGCOLOR="#bbc5ca" CELLPADDING="4" CELLSPACING="0" align="center">
+		<TR>
+			<TD HEIGHT="167">
+				<TABLE BORDER="0" WIDTH="400" CELLPADDING="0" CELLSPACING="0" align="center">
+					<TR>
+						<TD COLSPAN="2" VALIGN="bottom" height=30><B>Initialization Properties</B></TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Server IP:</TD>
+						<TD ALIGN="left" width="288">&nbsp;<INPUT id="svrip" NAME="serverip" VALUE="192.192.192.192" TYPE="TEXT" SIZE="20"> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Imaging Suite URL:</TD>
+						<TD ALIGN="left">&nbsp;
+					  	<!--  IMAGESUITEURL FOR PHILIPS BACKEND (4.X CLIENT) -->
+							<!-- <INPUT id="svrurl" NAME="url" TYPE="TEXT" VALUE="http://192.192.192.192/iSiteWeb/WorkList/PrimaryWorkList.ashx" SIZE="40"> -->
+					  	<!--  IMAGESUITEURL FOR IDX BACKEND (3.X CLIENT) -->
+							<INPUT id="svrurl" NAME="url" TYPE="TEXT" VALUE="http://192.192.192.192/iSuite" SIZE="40">
+						</TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Imaging Suite DSN:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT id="svrdsn" NAME="dsn" TYPE="TEXT" VALUE="iSite" SIZE="40"> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Server Port:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT id="svrport" NAME="serverport" VALUE="6464" TYPE="TEXT" SIZE="20"> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">User Name:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT NAME="uname" TYPE="TEXT" SIZE="20"> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Password:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT NAME="pword" TYPE="PASSWORD" SIZE="20"> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Authsource:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT NAME="authsource" VALUE="iSite" TYPE="TEXT" SIZE="20"> </TD>
+					</TR>
+				</TABLE>
+				<TABLE BORDER="0" WIDTH="400" CELLPADDING="0" CELLSPACING="0" align="center">
+					<TR>
+						<TD COLSPAN="2" VALIGN="bottom" height=30 width="398"><B>iSite Enterprise</B></TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Patient ID:</TD>
+						<TD ALIGN="left" width="288">&nbsp;<INPUT id="pid" NAME="patientid" TYPE="TEXT" SIZE="20"> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Accession ID:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT id="acc" NAME="accession" TYPE="TEXT" SIZE="20"> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Organization:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT id="org" NAME="organization" TYPE="TEXT"  VALUE="iSite" SIZE="20"> </TD>
+					</TR>
+					<TR>
+						<TD COLSPAN="2" align="center" HEIGHT="45" width="398">
+							<INPUT TYPE="button" VALUE=" ShowExam " NAME="showbtn" onclick="OnShow(uname.value, pword.value,authsource.value)">&nbsp;
+						</TD>
+					</TR>
+				</TABLE>
+
+			</TD>
+		</TR>
+	</TABLE>
+</TR>
+</TABLE>
+
+</body>
+
+</html>

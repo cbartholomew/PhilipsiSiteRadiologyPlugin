@@ -1,0 +1,159 @@
+<!-- saved from url=(0014)about:internet -->
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Custom Login Screen Sample</title>
+
+<!--
+
+Custom Login Sample
+
+This example shows how to put up your own login screen in place of the 
+standard iSite Enterprise login screen.  This page puts up a login page
+and does not show the iSite Enterprise control until a successful login
+occurs.  This example uses style sheets to show and hide the custom login
+screen and the iSite Enterprise controls. 
+
+NOTE:
+You will have to modify the code to point to your server.  See the 
+definition for the <OBJECT id=iSiteNonVisualCtrl...> below.
+
+
+You will have to modify the code if using this sample with the Philips Backend (4.x client)
+You will need to switch the ImageSuiteURL and the Options parameters.
+
+
+
+//-->
+
+<SCRIPT src="iSiteConfig.js" ></SCRIPT>
+
+<SCRIPT Language="JavaScript">
+<!--
+var L_strLoginError_Message = "Error Logging in."; 
+
+// Initialize the non-visual control and make sure iSite Enterprise
+// control is not visible.
+function Init()
+{
+   //Note: Change iSiteConfig.js file for your iSite settins.    
+	uname.value = isiteInfo.User.UserName;
+	pword.value = isiteInfo.User.Password;
+	authsource.value = isiteInfo.User.AuthSource;
+	
+   iSiteNonVisualCtrl.iSyntaxServerIP   = isiteInfo.Server.iSyntaxServerIP;
+   iSiteNonVisualCtrl.ImageSuiteDSN     = isiteInfo.Server.ImageSuiteDSN;
+   iSiteNonVisualCtrl.ImageSuiteURL     = isiteInfo.Server.ImageSuiteURL;
+   iSiteNonVisualCtrl.Options           = isiteInfo.Server.Options;
+
+
+   // Always initialize the non-visual control first
+   if (!iSiteNonVisualCtrl.Initialize())
+      alert("Failed to initialize the iSite Non-Visual Control");
+   else
+      iSite.style.display = "none" 
+}
+
+// Log in and show the isite enterprise control if successful
+function OnLogin(user, password, authsource)
+{
+   // Attempt the login 
+   if (iSiteNonVisualCtrl.Login(user,password,authsource, "", ""))
+   {
+      // hide the login screen
+      LoginTable.style.display = "none";
+		
+      // show the iSiteEnterprise control through re-sizing (fit to screen)
+      iSite.style.display = "inline";
+
+      if (iSite.Initialized == 0)
+         iSite.Initialize(iSiteNonVisualCtrl);
+   }
+   else
+   {
+      alert(L_strLoginError_Message)
+   }   
+}
+
+//-->
+</SCRIPT>
+
+<!--
+// This is the javascript that will trap the event fired for the logout.
+-->
+<SCRIPT LANGUAGE="JavaScript" FOR=iSite EVENT="EventLogout(AutoLogoutFlag)">
+
+   // hide the iSite control
+   iSite.style.display = "none";
+
+   // show the login screen
+   LoginTable.style.display = "inline";
+		
+</SCRIPT>
+
+
+</head>
+
+<body onload="Init()">
+<p>
+
+<OBJECT id="iSiteNonVisualCtrl"
+		  CLASSID = "clsid:DD0E6EAF-2822-4d42-A2CF-7FED75DA06CA"
+		  width=0%
+		  height=0%>
+	</OBJECT>  	 	
+
+
+<OBJECT id="iSite" 
+         CLASSID="clsid:F21CDD6E-3FE2-4d78-8709-83D5D939B7B2"  
+         width="100%" 
+         height="100%">
+</OBJECT>
+</p>
+
+<DIV id="LoginTable">
+<table BORDER="0" CELLPADDING="4" CELLSPACING="0" WIDTH=100% HEIGHT=100% align="center">
+<TR>
+	<table BORDER="0" CELLPADDING="4" CELLSPACING="0" WIDTH="400"  align="center">
+	<TR align="center">
+		<TD><IMAGE src="saapi.bmp"></TD>
+	</TR>
+	<TR align="center" BGCOLOR="#D4D4D4">
+		<TD HEIGHT="30"><FONT COLOR="black" SIZE="5">Custom Login Screen Using JavaScript</FONT></TD>
+	</TR>
+	</TABLE>
+	<TABLE BORDER="0" WIDTH="400" BGCOLOR="#bbc5ca" CELLPADDING="4" CELLSPACING="0" align="center">
+		<TR>
+			<TD HEIGHT="167" ALIGN="center">
+				<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+					<TR>
+						<TD COLSPAN="2" VALIGN="top" height=30>Please enter your username and password.<BR><BR></TD>
+					</TR>
+					<TR>
+						<TD ALIGN="right">Username:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT NAME="uname" TYPE="TEXT" SIZE="24"> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="right">Password:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT NAME="pword" TYPE="PASSWORD" SIZE="24"> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="right">AuthSource:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT NAME="authsource" TYPE="TEXT" VALUE="iSite" SIZE="24"> </TD>
+					</TR>
+					<TR>
+						<TD HEIGHT="31">&nbsp;</TD>
+						<TD HEIGHT="31" align="center"><INPUT TYPE="button" VALUE="  Login " NAME="submitbtn" onclick="OnLogin(uname.value, pword.value, authsource.value)" style="width: 113px">&nbsp;</TD>
+					</TR>
+				</TABLE>
+			</TD>
+		</TR>
+	</TABLE>
+</DIV>
+</TR>
+</TABLE>
+
+</body>
+
+</html>

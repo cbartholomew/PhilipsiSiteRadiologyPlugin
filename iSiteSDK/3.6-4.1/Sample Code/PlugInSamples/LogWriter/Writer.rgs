@@ -1,0 +1,26 @@
+HKCR
+{
+	LogWriter.Writer.1 = s 'Writer Class'
+	{
+		CLSID = s '{8848DC58-BEDD-4D31-82A6-0D3765881F5C}'
+	}
+	LogWriter.Writer = s 'Writer Class'
+	{
+		CLSID = s '{8848DC58-BEDD-4D31-82A6-0D3765881F5C}'
+		CurVer = s 'LogWriter.Writer.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {8848DC58-BEDD-4D31-82A6-0D3765881F5C} = s 'Writer Class'
+		{
+			ProgID = s 'LogWriter.Writer.1'
+			VersionIndependentProgID = s 'LogWriter.Writer'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{EFE28B5C-D02A-47A1-8E67-88C51D818C82}'
+		}
+	}
+}

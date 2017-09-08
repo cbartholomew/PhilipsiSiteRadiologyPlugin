@@ -1,0 +1,207 @@
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+
+<SCRIPT src="iSiteConfig.js" ></SCRIPT>
+
+<title>Philips iSite</title>
+
+<!--
+
+iSite Enterprise Menu Sample
+
+This example shows how to add menu items to the exam and image view popup menus and
+how to trap the events triggered with the menus are selected.  You may also use 
+this example to learn how to trap events in general.  
+
+NOTE:
+You will have to modify the code to point to your server and use a user and password
+that is appropriate for your site.  See the definintion for the 
+<OBJECT id=iSiteNonVisual...> below.  See the Init() function for the login.
+
+You will have to modify the code if using this sample with the Philips Backend (4.x client)
+You will need to switch the ImageSuiteURL and the Options parameters.
+
+
+//-->
+
+<script langauge="javascript">
+
+var MENU_ITEM_VIEW = "View Menu Test";
+var MENU_ITEM_EXAM = "Exam Menu Test";
+
+function Init()
+{
+
+   //isiteInfo.Controls.AddNonVisualControl("NVIS_CONTROL","iSiteNonVisualCtrl");	  
+   //isiteInfo.Controls.AddVisualControl("VIS_CONTROL","iSiteEnterpriseCtrl"); 
+
+   //Note: Change iSiteConfig.js file for your iSite settins.    
+   iSiteNonVisualCtrl.iSyntaxServerIP   = isiteInfo.Server.iSyntaxServerIP;
+   iSiteNonVisualCtrl.ImageSuiteDSN     = isiteInfo.Server.ImageSuiteDSN;
+   iSiteNonVisualCtrl.ImageSuiteURL     = isiteInfo.Server.ImageSuiteURL;
+   iSiteNonVisualCtrl.Options           = isiteInfo.Server.Options;
+   
+   iSiteEnterpriseCtrl.Options          = isiteInfo.Server.Options;
+
+    var userName        = isiteInfo.User.UserName;
+    var password        = isiteInfo.User.Password;
+    var authSource      = isiteInfo.User.AuthSource
+
+   // This just puts a copyright in the IE status window
+   window.status        = isiteInfo.CopyRights;
+
+   // Initialize non-visual the control and login.
+   iSiteNonVisualCtrl.Initialize();
+
+   iSiteNonVisualCtrl.Login(userName, password, authSource, "", "");
+   
+   // Initialize the iSite Enterprise control, This will show the control
+   iSiteEnterpriseCtrl.Initialize(iSiteNonVisualCtrl);
+
+   // Add an image view menu item and an exam menu time 
+   iSiteEnterpriseCtrl.AddViewMenuItem(MENU_ITEM_VIEW);
+   iSiteEnterpriseCtrl.AddExamMenuItem(MENU_ITEM_EXAM);
+   
+}
+
+function Destroy()
+{
+   // It is important to remove the menu items
+   iSiteEnterpriseCtrl.RemoveViewMenuItem(MENU_ITEM_VIEW);
+   iSiteEnterpriseCtrl.RemoveExamMenuItem(MENU_ITEM_EXAM);
+}
+
+function GetNodeValue(nodeList,nodeName)
+{
+    return nodeList.item(0).selectSingleNode(nodeName).text;
+}
+
+// This function is called by the javascript that traps the event for the 
+// image view menu item selection.
+function OnViewEvent(ContextRecord)
+{
+   // clear the screen of any previous values
+   CanvasPageID.value = "";
+   ShelfID.value     = "";
+   WindowID.value    = "";
+   StudyUID.value     = "";
+   SeriesUID.value    = "";
+   SOPUID.value       = "";
+
+   // Uncomment this line to see the xml
+   alert (ContextRecord);
+
+   // if we got a context record then parse the values from the XML 
+   // and fill in the screen.
+   if (ContextRecord != "")
+   {
+      var doc = xmldso.XMLDocument;
+      doc.loadXML(ContextRecord);
+
+      var nodeList = doc.getElementsByTagName("WindowInfo");
+
+      CanvasPageID.value = GetNodeValue(nodeList,"CanvasPageID");
+      ShelfID.value      = GetNodeValue(nodeList,"ShelfID");
+      WindowID.value     = GetNodeValue(nodeList,"WindowID");
+      StudyUID.value     = GetNodeValue(nodeList,"x0020000D");
+      SeriesUID.value    = GetNodeValue(nodeList,"x0020000E");
+      SOPUID.value       = GetNodeValue(nodeList,"x00080018");
+   }
+}
+
+</script>
+
+<!--
+// *****************************************
+// This is the javascript that will trap the event fired for the image view menu item.
+// ***************************************** -->
+<SCRIPT LANGUAGE="JavaScript" FOR=iSiteEnterpriseCtrl EVENT="EventViewMenuSelected(menuitem, contextRecord)">
+	OnViewEvent(contextRecord);
+</SCRIPT>
+
+<!--
+// *****************************************
+// This is the javascript that will trap the event fired for the event view menu item.
+// ***************************************** -->
+<SCRIPT LANGUAGE="JavaScript" FOR=iSiteEnterpriseCtrl EVENT="EventExamMenuSelected(menuitem, ExamID)">
+   // show the internal exam id
+   IntExamID.value    = ExamID;
+
+   // clear the rest of the values
+   CanvasPageID.value = "";
+   ShelfID.value     = "";
+   WindowID.value    = "";
+   StudyUID.value     = "";
+   SeriesUID.value    = "";
+   SOPUID.value       = "";
+</SCRIPT>
+
+</head>
+
+<body scroll="no" leftmargin=0 topmargin=0 BOTTOMMARGIN=0 RIGHTMARGIN=0 onload="Init()" onunload="Destroy()">
+<OBJECT width=0 height=0
+    classid="clsid:550dda30-0541-11d2-9ca9-0060b0ec3d39"
+    id="xmldso">
+</OBJECT>
+
+<!--
+<div id="NVIS_CONTROL"></div>
+<div id="VIS_CONTROL"></div>
+-->
+
+
+<OBJECT id=iSiteNonVisualCtrl
+	  CLASSID = "clsid:DD0E6EAF-2822-4d42-A2CF-7FED75DA06CA"
+    width=0%
+    height=0%>
+</OBJECT> 
+
+<OBJECT 
+    id=iSiteEnterpriseCtrl 
+    CLASSID="clsid:F21CDD6E-3FE2-4d78-8709-83D5D939B7B2"  
+    width=100% 
+    height=65%>
+</OBJECT>
+
+Select the menu items "View Menu Test" and "Exam Menu Test" to fill in the values below.
+
+<TABLE BORDER="2" CELLPADDING="0" CELLSPACING="0">
+   <thead>
+    <tr>
+      <td>Field</td>
+      <td>Value</td>
+    </tr>
+    </thead>
+	<TR>
+		<TD ALIGN="left" >Exam ID:</TD>
+		<TD ALIGN="left">&nbsp;<INPUT id="IntExamID" NAME="IntExamID" TYPE="TEXT" SIZE="30"> </TD>
+	</TR>
+	<TR>
+		<TD ALIGN="left" >CanvasPage ID:</TD>
+		<TD ALIGN="left" >&nbsp;<INPUT id="CanvasPageID" NAME="CanvasPageID" TYPE="TEXT" SIZE="30"> </TD>
+	</TR>
+	<TR>
+		<TD ALIGN="left" >Shelf ID:</TD>
+		<TD ALIGN="left" >&nbsp;<INPUT id="ShelfID" NAME="ShelfID" TYPE="TEXT" SIZE="30"> </TD>
+	</TR>
+	<TR>
+		<TD ALIGN="left" >Window ID:</TD>
+		<TD ALIGN="left" >&nbsp;<INPUT id="WindowID" NAME="WindowID" TYPE="TEXT" SIZE="30"> </TD>
+	</TR>
+	<TR>
+		<TD ALIGN="left" >Study UID:</TD>
+		<TD ALIGN="left">&nbsp;<INPUT id="StudyUID" NAME="StudyUID" TYPE="TEXT" SIZE="80"> </TD>
+	</TR>
+	<TR>
+		<TD ALIGN="left" >Series UID:</TD>
+		<TD ALIGN="left">&nbsp;<INPUT id="SeriesUID" NAME="SeriesUID" TYPE="TEXT" SIZE="80"> </TD>
+	</TR>
+	<TR>
+		<TD ALIGN="left" >SOP Instance UID:</TD>
+		<TD ALIGN="left">&nbsp;<INPUT id="SOPUID" NAME="SOPUID" TYPE="TEXT" SIZE="80"> </TD>
+	</TR>
+</TABLE>
+</body>
+</html>
+	

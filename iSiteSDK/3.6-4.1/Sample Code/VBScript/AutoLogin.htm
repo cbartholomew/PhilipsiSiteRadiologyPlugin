@@ -1,0 +1,66 @@
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<title>Philips iSite</title>
+
+<!--
+Note: 
+You will have to modify the code if using this sample with the Philips Backend (4.x client)
+You will need to switch the ImageSuiteURL and the Options parameters.
+
+-->
+
+</head>
+
+<SCRIPT src="../JavaScript/iSiteConfig.js" ></SCRIPT>
+
+<script language="JScript">
+    function getSiteInfo()
+    {
+        return isiteInfo;        
+    }
+</script>
+
+<script language="VBScript">
+Sub OnLoad()
+	
+        dim isiteInfo
+
+        set isiteInfo = getSiteInfo() 'transport object from JavaScript section
+	
+        'On Error Resume Next
+
+        'Note: Change iSiteConfig.js file for your iSite settins.    
+        iSiteNonVisualCtrl.iSyntaxServerIP   = isiteInfo.Server.iSyntaxServerIP
+        iSiteNonVisualCtrl.ImageSuiteDSN     = isiteInfo.Server.ImageSuiteDSN
+        iSiteNonVisualCtrl.ImageSuiteURL     = isiteInfo.Server.ImageSuiteURL
+        iSiteNonVisualCtrl.Options           = isiteInfo.Server.Options
+
+        iSiteEnterpriseCtrl.Options          = isiteInfo.Server.Options
+
+        iSiteNonVisualCtrl.Initialize()
+	
+        iSiteNonVisualCtrl.Login isiteInfo.User.UserName, isiteInfo.User.Password, isiteInfo.User.AuthSource, "", ""
+        iSiteEnterpriseCtrl.Initialize(iSiteNonVisualCtrl)
+    	
+End Sub
+	
+</script>
+<body scroll="no" leftmargin=0 topmargin=0 BOTTOMMARGIN=0 RIGHTMARGIN=0 onload="OnLoad()">
+
+<OBJECT id=iSiteNonVisualCtrl
+CLASSID="clsid:DD0E6EAF-2822-4d42-A2CF-7FED75DA06CA"
+width=0%
+height=0%>
+</OBJECT>
+
+<OBJECT 
+    id=iSiteEnterpriseCtrl 
+    CLASSID="clsid:F21CDD6E-3FE2-4d78-8709-83D5D939B7B2"  
+    width=100% 
+    height=65%>
+</OBJECT><!---->	
+	
+	
+</body>
+</html>

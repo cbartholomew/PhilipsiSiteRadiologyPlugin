@@ -1,0 +1,266 @@
+<!-- saved from url=(0014)about:internet -->
+<html>	
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>iSite Enterprise Query Sample Using Javascript</title>
+
+<!--
+
+iSite Enterprise Sample.
+This example shows how to perform and parse a query.  
+-->
+<SCRIPT src="iSiteConfig.js" ></SCRIPT>
+
+<SCRIPT Language="JavaScript">
+<!--
+
+
+var bInitialized = 0;
+
+function Init()
+{
+	// only initialize once.
+	if (!bInitialized)
+	{
+       //Note: Change iSiteConfig.js file for your iSite settins.    
+       iSiteNonVisualCtrl.iSyntaxServerIP   = isiteInfo.Server.iSyntaxServerIP;
+       iSiteNonVisualCtrl.ImageSuiteDSN     = isiteInfo.Server.ImageSuiteDSN;
+       iSiteNonVisualCtrl.ImageSuiteURL     = isiteInfo.Server.ImageSuiteURL;
+       iSiteNonVisualCtrl.Options           = isiteInfo.Server.Options;
+
+       if (!iSiteNonVisualCtrl.Initialize())
+       {
+          alert("Failed to initialize the iSite Non-Visual Control");
+          
+          Login.value = "Login failed";
+          
+          return false;
+       }
+	   
+	   iSiteNonVisualCtrl.Login(isiteInfo.User.UserName,isiteInfo.User.Password,isiteInfo.User.AuthSource, "", "")
+		bInitialized = 1;
+	   
+	   Login.value = "Logged in successfully.";
+
+	}
+	
+	return true;
+}
+
+// log in and run a query
+function OnQuery()
+{
+	if(Init() != true)
+	{
+	    alert("Can not perform query. Failed to initialize NonVisualControrl.");
+	
+	    return;	
+	}
+	
+	// Run the query 
+	var results = iSiteNonVisualCtrl.Query(querystring.value, querytype.value, 200)
+
+	if (results != "")
+	{
+			ShowResults(results);
+	}
+	else
+	{
+		alert("No Query results found.");
+	}
+}
+
+function ShowResults(results)
+{
+   patientname.value = "";
+   patientid.value = "";
+   accession.value = "";
+   modality.value = "";
+   bodypart.value = "";
+   totalresults.value = "";
+   var total = "0";
+   var this_patientname = "";
+   var this_patientid = "";   
+   var this_accession = "";   
+   var this_modality = "";    
+   var this_bodypart = "";    
+   
+   
+   // Uncomment this alert to see the xml
+   //alert(results);
+
+   if (results != "")
+   {
+      var doc = xmldso.XMLDocument;
+      doc.loadXML(results);
+
+      var nodeList = doc.getElementsByTagName("QueryResult");
+
+      total  = String(Number(nodeList.item(0).selectSingleNode("TotalReturns").text));
+     	
+      if (total  == "0")
+      {
+				alert("No Query Results");
+     	}
+     	else
+     	{
+     	  totalresults.value = total;
+      
+      	var nodeList = doc.getElementsByTagName("Exam");
+
+ 	      //Loop over the results and find the latest exam
+				for(i=0;i<=total-1;i++)
+				{
+						try 
+						{
+								//var this_examID   = nodeList.item(i).selectSingleNode("IDXIntExamID").text;
+								var this_studtyDDTM   = nodeList.item(i).selectSingleNode("StudyDTTM").text;
+								if (i == 0)
+							  {
+									//examID = this_examID;
+									timestr1 = this_studtyDDTM;
+									timestr2 = this_studtyDDTM;
+					      	this_patientname = nodeList.item(i).selectSingleNode("x00100010").text;
+					      	this_patientid   = nodeList.item(i).selectSingleNode("x00100020").text;
+					      	this_accession   = nodeList.item(i).selectSingleNode("x00080050").text;
+					      	this_modality    = nodeList.item(i).selectSingleNode("x00080060").text;
+					     	 	this_bodypart    = nodeList.item(i).selectSingleNode("x00180015").text;									
+								}
+								else
+								{
+								  timestr2 = this_studtyDDTM;
+								}
+								
+								if (timeCheck(timestr1, timestr2))
+							  {
+					      	this_patientname = nodeList.item(i).selectSingleNode("x00100010").text;
+					      	this_patientid   = nodeList.item(i).selectSingleNode("x00100020").text;
+					      	this_accession   = nodeList.item(i).selectSingleNode("x00080050").text;
+					      	this_modality    = nodeList.item(i).selectSingleNode("x00080060").text;
+					     	 	this_bodypart    = nodeList.item(i).selectSingleNode("x00180015").text;
+								}
+						}
+						catch (e)
+						{
+								alert("Error: " + e.message);
+	     					return;
+						}
+				}
+				//populate text boxes with most recent exam data
+				patientname.value = this_patientname; 
+      	patientid.value   = this_patientid;   
+      	accession.value   = this_accession;   
+      	modality.value    = this_modality;    
+     	 	bodypart.value    = this_bodypart;    
+     	}
+   }
+}
+
+function timeCheck(timestamp1, timestamp2)
+{
+	  timeStrFormated1 = formatTime(timestamp1);
+	  timeStrFormated2 = formatTime(timestamp2);
+		time1 = Date.parse(timeStrFormated1);  
+		time2 = Date.parse(timeStrFormated2);     
+    if (time2 > time1)
+     return true;
+}
+
+function formatTime(timeStamp) {
+	timestamp = new String(timeStamp);
+	var timeStr = "";
+	timeStr = timeStr + timestamp.substr(5, 2) + "/";
+	timeStr = timeStr + timestamp.substr(8, 2) + "/";
+	timeStr = timeStr + timestamp.substr(0, 4) + " ";
+	timeStr = timeStr + timestamp.substr(11, 2) + ":";
+	timeStr = timeStr + timestamp.substr(14, 2) + ":";
+	timeStr = timeStr + timestamp.substr(17, 2);
+	return timeStr;
+}
+
+
+//-->
+</SCRIPT>
+
+</head>
+
+<body onload ="Init()">
+
+<p>
+
+<OBJECT id="iSiteNonVisualCtrl"
+	  	  CLASSID = "clsid:DD0E6EAF-2822-4d42-A2CF-7FED75DA06CA"
+		  width=0%
+		  height=0%>
+	</OBJECT>  	 	
+
+<OBJECT id="xmldso"
+    classid="clsid:550dda30-0541-11d2-9ca9-0060b0ec3d39"
+	  width=0%
+	  height=0%>
+</OBJECT>
+
+</p>
+      
+<table BORDER="0" CELLPADDING="4" CELLSPACING="0" WIDTH=100% HEIGHT=100% align="center">
+<TR>
+    <table align=center >
+    <tr><td> Loggin Status: </td><td><INPUT readonly=readonly  id="Login" TYPE="TEXT"   SIZE="20" value="Trying to login...."></td></tr>
+    </table>
+
+	<table BORDER="0" CELLPADDING="4" CELLSPACING="0" WIDTH="500" align="center">
+	<TR align="center">
+		<TD><IMAGE src="saapi.bmp"></TD>
+	</TR>
+	<TR align="center" BGCOLOR="#008080" >
+		<TD HEIGHT="30"><FONT COLOR="white" SIZE="5">iSite Enterprise Sample Using JavaScript</FONT></TD>
+	</TR>
+	</TABLE>
+	<TABLE BORDER="0" WIDTH="500" BGCOLOR="#bbc5ca" CELLPADDING="4" CELLSPACING="0" align="center">
+		<TR>
+			<TD HEIGHT="167">
+							
+				<TABLE BORDER="0" WIDTH="400" CELLPADDING="0" CELLSPACING="0" align="center">
+					<TR>
+						<TD COLSPAN="2" VALIGN="bottom" height=30 width="398"><B>iSite Enterprise</B></TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Query String:</TD>
+						<TD ALIGN="left" width="288">&nbsp;<INPUT id="querystring" NAME="querystring" TYPE="TEXT" SIZE="20" value="x00100010="> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Query Type:</TD>
+
+						<TD ALIGN="left">&nbsp;<SELECT id="querytype" name="querytype">
+									  <OPTION value="INTERPRETATION")">INTERPRETATION
+									  <OPTION value="LOOKUP")" selected>LOOKUP
+									  <OPTION value="REFERRING")">REFERRING
+									  <OPTION value="EXCEPTION")">EXCEPTION
+									</SELECT></TD>
+					</TR>
+					<TR>
+						<TD COLSPAN="2" align="center" HEIGHT="45" width="398"><INPUT TYPE="button" VALUE=" Query " NAME="querybtn" onclick="OnQuery()"></TD>
+					</TR>
+				</TABLE>
+
+			</TD>
+		</TR>
+	</TABLE>
+</TR>
+</TABLE>
+<BR><BR>
+
+<table align=center >
+    <tr><td> Number of Results: </td><td><INPUT id="totalresults" TYPE="TEXT" SIZE="20" value=""></td></tr>
+    <tr>The most recent exam results shown here.</tr>
+    <tr><td>Patient Name: </td><td><INPUT id="patientname" TYPE="TEXT" SIZE="40" value=""></td></tr>
+    <tr><td>Patient ID: </td><td><INPUT id="patientid" TYPE="TEXT" SIZE="30" value=""></td></tr>
+    <tr><td>Accession: </td><td><INPUT id="accession" TYPE="TEXT" SIZE="30" value=""></td></tr>
+    <tr><td>Modality: </td><td><INPUT id="modality" TYPE="TEXT" SIZE="5" value=""></td></tr>
+    <tr><td>Body Part: </td><td><INPUT id="bodypart" TYPE="TEXT" SIZE="20" value=""></td></tr>
+</table>
+
+</body>
+
+</html>

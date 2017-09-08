@@ -1,0 +1,254 @@
+<!-- saved from url=(0013)about:internet -->
+<html>
+<head>
+<title>iSiteRadiology Sample Plug In Preferences</title>
+
+<SCRIPT language="javascript" src="ISRSamplePrefsUser.js"></SCRIPT>
+
+<script language="javascript">
+
+var MB_OK                    = 0x00000000;
+var MB_OKCANCEL              = 0x00000001;
+var MB_ABORTRETRYIGNORE      = 0x00000002;
+var MB_YESNOCANCEL           = 0x00000003;
+var MB_YESNO                 = 0x00000004;
+var MB_RETRYCANCEL           = 0x00000005;
+var MB_ICONHAND              = 0x00000010;
+var MB_ICONQUESTION          = 0x00000020;
+var MB_ICONEXCLAMATION       = 0x00000030;
+var MB_ICONASTERISK          = 0x00000040;
+var MB_ICONWARNING           = MB_ICONEXCLAMATION;
+var MB_ICONERROR             = MB_ICONHAND;
+var MB_ICONINFORMATION       = MB_ICONASTERISK;
+var MB_ICONSTOP              = MB_ICONHAND;
+
+// MessageBox return codes
+var IDOK          =  1;
+var IDCANCEL      =  2;
+var IDABORT       =  3;
+var IDRETRY       =  4;
+var IDIGNORE      =  5;
+var IDYES         =  6;
+var IDNO          =  7;
+var IDCLOSE       =  8;
+
+/////////////////////////////////////////////////////////////////////////
+// DECLARATIONS
+/////////////////////////////////////////////////////////////////////////
+
+var m_bModified = 0;
+
+/////////////////////////////////////////////////////////////////////////
+// FUNCTIONS
+/////////////////////////////////////////////////////////////////////////
+
+function OnLoad()
+{
+  // get user account and other preferences
+  GetSamplePreferences();
+  
+  // set to the page
+  EnablePrefsCtrl.checked = (m_Enable_Prefs == 1);
+  PreferenceOneCtrl.value = m_Preference_One;
+  PreferenceTwoCtrl.value = m_Preference_Two;
+  PreferenceThreeCtrl.value = m_Preference_Three;
+  EnableCheckCtrl.checked = (m_Enable_Check == 1);
+
+  // init the modified flag  
+  SetModified(0);
+  
+  var disable = !EnablePrefsCtrl.checked;
+  EnableControls(disable);  
+  
+  EnableControls(!EnablePrefsCtrl.checked);
+    
+  EnableCheckCtrl.disabled  = !EnablePrefsCtrl.checked;
+  EnableCheckTitle.disabled = !EnablePrefsCtrl.checked;
+  
+}
+
+function OnUnload()
+{
+
+}
+
+function OnChangeEnable()
+{
+  SetModified(1);
+  
+  EnableControls(!EnablePrefsCtrl.checked);
+}
+
+function EnableControls(disable)
+{  
+  PreferenceOneTitle.disabled    = disable;
+  PreferenceOneCtrl.disabled = disable;
+  
+  PreferenceTwoTitle.disabled    = disable;
+  PreferenceTwoCtrl.disabled = disable;
+
+  PreferenceThreeTitle.disabled = disable;
+  PreferenceThreeCtrl.disabled  = disable;
+
+  EnableCheckTitle.disabled  = disable;
+  EnableCheckCtrl.disabled = disable;
+  
+  // show or hide why we are disabling the controls.
+  if (disable)
+    DisableNote.style.visibility = 'visible';
+  else
+    DisableNote.style.visibility = 'hidden';
+}
+
+function SetPreferences()
+{
+  if (PreferenceOneCtrl.value == "")
+  {
+    Radiology.MessageBox("Invalid or blank Preference One.  Preferences will not be saved.", MB_OK|MB_ICONERROR);
+    PreferenceOneCtrl.focus();
+    return;
+  }
+  if (PreferenceTwoCtrl.value == "")
+  {
+    Radiology.MessageBox("Invalid or blank Preference Two.  Preferences will not be saved.", MB_OK|MB_ICONERROR);
+    PreferenceTwoCtrl.focus();
+    return;
+  }
+  
+  if (EnablePrefsCtrl.checked)
+    m_Enable_Prefs = 1;
+  else
+    m_Enable_Prefs = 0;
+    
+  m_Preference_One = PreferenceOneCtrl.value;
+  m_Preference_Two = PreferenceTwoCtrl.value;
+  m_Preference_Three = PreferenceThreeCtrl.value;
+
+  if (EnableCheckCtrl.checked)
+    m_Enable_Check = 1;
+  else
+    m_Enable_Check = 0;
+  
+  SetSamplePreferences();
+}
+
+function SetModified(bFlag)
+{
+  // if the user changes something we need to  to enable the apply button
+  if (m_bModified != bFlag)
+  {
+    m_bModified = bFlag;
+    if (m_bModified == 1)
+    {
+      Radiology.EnablePreferenceApplyButton();
+    }
+  }
+}
+
+
+function Radiology_EventPreferencesApply(PrefPageName, PrefType)
+{
+  // only do this for our preferences
+  if ((PrefPageName == SAMPLE_PREFS_NAME) && (PrefType == SAMPLE_PREFS_TYPE))
+  {
+    // no matter what happens we need to clear this flag.
+    SetModified(0);
+    SetPreferences();
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////
+</script>
+</head>
+
+<body onload="OnLoad()" onunload="OnUnload()" scroll="no" leftmargin=0 topmargin=0 BOTTOMMARGIN=0 RIGHTMARGIN=0 BGCOLOR="#bbc5ca" >
+<OBJECT id=xmldso height=0 width=0 
+classid=clsid:550dda30-0541-11d2-9ca9-0060b0ec3d39></OBJECT>
+
+<table width = "100%" BORDER="0" BGCOLOR="#2B4973" CELLPADDING="0" CELLSPACING="0" HEIGHT="36">
+<TR height = "36" width = "100%">
+<TD width="10">
+&nbsp;
+</TD>
+<TD width="32">
+<img align="left" src="logoSample.bmp" border="0" width="32" height="32" style="VERTICAL-ALIGN: middle" 
+     >
+</TD>
+<TD width = "10">
+&nbsp;
+</TD>
+<TD width="378">
+<TABLE>
+<TR>
+<TD class='stPrefTitle' style="FONT-WEIGHT: bold; COLOR: white" >
+Sample Application
+</TD>
+</TR>
+<TR>
+<TD  class='stPrefTitleSm' id='versionText' style="COLOR: white" >
+Version 1.0.0.0
+</TD>
+</TR>
+</TABLE>
+</TD>
+<TD height="32">
+<img align="right" width="150" src="logoPlatform.bmp" border="0" height="32" style="VERTICAL-ALIGN: middle" >
+</TD>
+<TD width = "20">
+&nbsp;
+</TD>
+</TR>
+</table>
+
+<INPUT onkeypress=OnChangeEnable() onclick=OnChangeEnable() type=checkbox name="EnablePrefsCtrl">Enable Preferences
+
+<table BORDER="0" BGCOLOR="#bbc5ca" CELLPADDING="4" CELLSPACING="0" WIDTH="100%" HEIGHT="70%">
+<TR>
+  <TD style="WIDTH: 10px" vAlign=top width=10></TD>
+	<TD vAlign=top>
+		<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+			<TR>
+				<TD ALIGN="right">
+            <P id="PreferenceOneTitle" align=left>Preference One:</P> </TD>
+				<TD ALIGN="left">&nbsp;<INPUT NAME="PreferenceOneCtrl" onkeydown="SetModified(1)" maxLength=256 style="WIDTH: 120px; HEIGHT: 22px" 
+            size=18> </TD>
+			</TR>
+			<TR>
+				<TD ALIGN="right">
+            <P id="PreferenceTwoTitle" align=left>Preference Two:</P></TD>
+				<TD ALIGN="left">&nbsp;<INPUT NAME="PreferenceTwoCtrl" onkeydown="SetModified(1)" maxLength=256 style="WIDTH: 120px; HEIGHT: 22px" 
+            size=19> </TD>
+			</TR>
+			<TR>
+				<TD ALIGN="right">
+            <P id="PreferenceThreeTitle"  align=left >Preference Three:</P> </TD>
+				<TD ALIGN="left">&nbsp;<INPUT NAME="PreferenceThreeCtrl" onkeydown="SetModified(1)" maxLength=256 style="WIDTH: 120px; HEIGHT: 22px" 
+            size=18  
+           > </TD>
+			</TR>
+		</TABLE>
+      <p id="EnableCheckTitle"><INPUT onkeypress=SetModified(1) onclick=SetModified(1) type=checkbox name="EnableCheckCtrl">Check value to store as preference</p>
+      <p id="DisableNote">Modification of sample preferences has been disabled. 
+      <BR><BR>Click Enable Preferences to enable preference fields.
+      </p>	
+   </TD>
+</TR>
+</table>
+
+<table width = "100%" BORDER="0" FGCOLOR="#FFFFFF" BGCOLOR="#2B4973" CELLPADDING="4" CELLSPACING="0" HEIGHT="36">
+<TR height = "16" width = "100%">
+<TD width="10">
+&nbsp;
+</TD>
+<TD align='left' width="70%" style="FONT-WEIGHT: normal; COLOR: white;"  >
+Technical Support: 1-(877)-328-2808 
+</TD>
+<TD align='right' width="30%" style="COLOR: white">
+support@philips.com
+</TD></TD></TR>
+</table>
+
+</body>
+
+</html>
+

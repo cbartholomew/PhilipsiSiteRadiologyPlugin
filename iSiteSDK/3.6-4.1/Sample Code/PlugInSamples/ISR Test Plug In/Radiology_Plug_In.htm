@@ -1,0 +1,2073 @@
+<!-- saved from url=(0013)about:internet -->
+<HTML>
+	<HEAD>
+		<TITLE>iSite Radiology Plug-In</TITLE>
+		<META http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<SCRIPT language="javascript" src="Radiology_Plug_In.js"></SCRIPT>
+		<SCRIPT language="javascript" src="Radiology_Plug_In_Arrays.js"></SCRIPT>
+		<SCRIPT language="javascript">	
+		
+		//This code demonstrates how to create an iSite Radiology Plug-In. Please use or modify this code for
+		//your particular Plug-In needs. Stentor Corporation 2004.
+
+		//Create an error handler to assist in debugging.
+		function HandleError(msg, url, lno)
+		{
+			var errMsg = 	"Error Occurred.\n" +
+										"Error: " + msg +
+										"URL: " + URL +
+										"Line: " + lno;
+			alert(errMsg);
+			return;
+		}
+
+		window.error = HandleError;
+
+			
+		var CanvasPageID = "";
+		var SQLQuery = "";
+		var SQLQueryType = "";
+		var QueryType = "";
+		var CurrentOperation = 0;
+		var Param1 = "";
+		var Param2 = "";
+		var Param3 = "";
+		var Param4 = "";
+		var Param5 = "";
+		var Param6 = "";
+		var Param7 = "";
+		var Param8 = "";
+
+		//This function handles the main API list selection. 
+		function GetSelection()
+		{
+			//translate the selectedIndex to the method index
+
+			var SelIndex = MethodSelect[APISelect.selectedIndex][0];
+			//var currentText = APISelect.options[SelIndex].text;
+			HideAllTables();
+			CurrentOperation = SelIndex;
+			OutputWindowDiv.innerHTML = "";
+			EventOutputDiv.innerHTML = "";
+			
+			switch(SelIndex)
+			{
+				case 0:
+					break;
+				case 1:
+					//ChangePassword
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Old Password:</B>";
+					T2Param2Title.innerHTML = "<B>New Password:</B>";
+					break;
+				case 2:
+					//Query
+					SQLQuery = "";
+					QueryType = "QUERY";
+					PopulateSelectList(window.SelectQueryColumn, QueryColumns);
+					QueryTable.style.display = "inline";
+					QueryButtonTable.style.display = "inline";
+					break;
+				case 3:
+					//Exists
+					QueryType = "EXISTS";
+					PopulateSelectList(window.SelectQueryColumn, QueryColumns);
+					QueryTable.style.display = "inline";
+					QueryButtonTable.style.display = "inline";
+					break;
+				case 4:
+					//FindPatient
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>MRN:</B>";
+					T2Param2Title.innerHTML = "<B>Organization ID:</B>";
+					break;	
+				case 5:
+					//FindExam
+					ThreeParameterTable.style.display = "inline";
+					T3Param1Title.innerHTML = "<B>Accession:</B>";
+					T3Param2Title.innerHTML = "<B>MRN:</B>";
+					T3Param3Title.innerHTML = "<B>Organization Code:</B>";
+					break;		
+				case 6:
+					//FindStudy
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Study UID:</B>";
+					break;
+				case 7:
+					//GetReportData
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Internal Patient ID:</B>";	
+					T2Param2Title.innerHTML = "<B>Internal Exam ID:</B>";
+					break;
+				case 8:
+					//SetPreference
+					ThreeParameterTable.style.display = "inline";
+					T3Param1Title.innerHTML = "<B>Name:</B>";	
+					T3Param2Title.innerHTML = "<B>Type:</B>";
+					T3Param3Title.innerHTML = "<B>Data:</B>";
+					break;	
+				case 9:
+					//GetPreference
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Name:</B>";	
+					T2Param2Title.innerHTML = "<B>Type:</B>";
+					break;
+				case 10:
+					//ListCanvasPages
+					InvokeButtonTable.style.display = "inline";
+					break;
+				case 11:
+					//OpenCanvasPage
+					FiveParameterTable.style.display = "inline";
+					T5Param1Title.innerHTML = "<B>IntExamID:</B>";	
+					T5Param2Title.innerHTML = "<B>IntExceptionID:</B>";
+					T5Param3Title.innerHTML = "<B>Reveal:</B>";
+					T5Param4Title.innerHTML = "<B>Lock:</B>";
+					T5Param5Title.innerHTML = "<B>OpenNew:</B>";
+					break;
+				case 12:
+					//GetCanvasPageStatus
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Canvas Page ID:</B>";
+					break;	
+				case 13:
+					//CloseCanvasPage
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Canvas Page ID:</B>";	
+					T2Param2Title.innerHTML = "<B>Discard Changes:</B>";
+					break;
+				case 14:
+					//ListShelfs
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Canvas Page ID:</B>";
+					break;
+				case 15:
+					//OpenShelf
+					FourParameterTable.style.display = "inline";
+					T4Param1Title.innerHTML = "<B>Canvas Page ID:</B>";	
+					T4Param2Title.innerHTML = "<B>Int Exam ID:</B>";
+					T4Param3Title.innerHTML = "<B>Int Exception ID:</B>";
+					T4Param4Title.innerHTML = "<B>Reveal:</B>";
+					break;
+				case 16:
+					//GetShelfStatus
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Shelf ID:</B>";
+					break;
+				case 17:
+					//CloseShelf
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Shelf ID:</B>";
+					break;
+				case 18:
+					//AddViewMwnuItem
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Name:</B>";
+					break;
+				case 19:
+					//RemoveViewMenuItem
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Name:</B>";
+					break;
+				case 20:
+					//InsertAfterViewMenuItem
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Name:</B>";	
+					T2Param2Title.innerHTML = "<B>Name After:</B>";
+					break;
+				case 21:
+					//AddExamMenuItem
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Name:</B>";
+					break;
+				case 22:
+					//RemoveExamMenuItem
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Name:</B>";
+					break;
+				case 23:
+					//InsertAfterExamMeunItem
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Name:</B>";	
+					T2Param2Title.innerHTML = "<B>Name After:</B>";										
+					break;
+				case 24:
+					//AddShelfMenuItem
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Name:</B>";										
+					break;
+				case 25:
+					//RemoveShelfMenuItem
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Name:</B>";
+					break;
+				case 26:
+					//InsertAfterShelfMenuItem
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Name:</B>";	
+					T2Param2Title.innerHTML = "<B>Name After:</B>";
+					break;
+				case 27:
+					//CopyToClipboard
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Window ID:</B>";
+					break;										
+				case 28:
+					//GetShelfWindowIDs
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Shelf ID:</B>";
+					break;
+				case 29:
+					//GetWindowContext
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Window ID:</B>";
+					break;
+				case 30:
+					//GetDICOMValue
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Window ID:</B>";	
+					T2Param2Title.innerHTML = "<B>DICOM Tag:</B>";
+					break;
+				case 31:
+					//GetDICOMInstance
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Window ID:</B>";	
+					T2Param2Title.innerHTML = "<B>ImageUID:</B>";						
+					break;
+				case 32:
+					//Reset
+					InvokeButtonTable.style.display = "inline";
+					break;
+				case 33:
+					//DisplayMediaExportPage 
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Internal Exam Ids:</B>";	
+					T2Param2Title.innerHTML = "<B>RemoveAllExams:</B>";
+					break;
+				case 34:
+					//SetWindowImage 
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Window ID:</B>";	
+					T2Param2Title.innerHTML = "<B>ImageUID:</B>";
+					break;
+				case 35:
+					//SetWindowView 
+					SixParameterTable.style.display = "inline";
+					T6Param1Title.innerHTML = "<B>Window ID:</B>";
+					T6Param2Title.innerHTML = "<B>Zoom Level:</B>";
+					T6Param3Title.innerHTML = "<B>Top:</B>";
+					T6Param4Title.innerHTML = "<B>Left:</B>";
+					T6Param5Title.innerHTML = "<B>Width:</B>";
+					T6Param6Title.innerHTML = "<B>Center:</B>";
+					break;
+				case 36:
+					//GetStaticWindowInfo 
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Window ID:</B>";
+					break;
+				case 37:
+					//GetActiveWindow 
+					InvokeButtonTable.style.display = "inline";
+					break;
+				case 38:
+					//SetMarkRead
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Internal ExamID:</B>";
+					T2Param2Title.innerHTML = "<B>Mark Read:</B>";
+					break;
+				case 39:
+					//GetCurrentUser 
+					InvokeButtonTable.style.display = "inline";
+					break;
+				case 40:
+					//AddPreferencePage 
+					ThreeParameterTable.style.display = "inline";
+					T3Param1Title.innerHTML = "<B>Name:</B>";
+					T3Param2Title.innerHTML = "<B>URL:</B>";
+					T3Param3Title.innerHTML = "<B>Type:</B>";
+					break;
+				case 41:
+					//EnablePreferenceApplyButton 
+					InvokeButtonTable.style.display = "inline";
+					break;
+				case 42:
+					//MessageBox 
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Message Text:</B>";	
+					T2Param2Title.innerHTML = "<B>Message Box Type:</B>";
+					break;
+				case 43:
+					//SetActivePage 
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Page Name:</B>";	
+					T2Param2Title.innerHTML = "<B>Type:</B>";
+					break;
+				case 44:
+					//FindShelfID 
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Internal ExamID:</B>";
+					break;
+				case 45:
+					//FindCanvasPageID 
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Internal Patient ID:</B>";
+					break;
+				case 46:
+					//Logout
+					InvokeButtonTable.style.display = "inline";
+					break;
+				case 47:
+					//ListMediaExportExams
+					InvokeButtonTable.style.display = "inline";
+					break;
+				case 49:
+				  //GetWorkstationLocations
+				  InvokeButtonTable.style.display = "inline";
+				  break;
+				case 50:
+				  //GetAuthSources
+				  InvokeButtonTable.style.display = "inline";
+				  break;
+				case 51:
+				  //GetCachedExams
+				  InvokeButtonTable.style.display = "inline";
+				  break;
+				case 52:
+				  //CacheExam
+					ThreeParameterTable.style.display = "inline";
+					T3Param1Title.innerHTML = "<B>Int Exam ID:</B>";
+					T3Param2Title.innerHTML = "<B>Int Exception ID:</B>";
+					T3Param3Title.innerHTML = "<B>Lock:</B>";				  
+				  break;
+				case 53:
+				  //ResumeCachingExam
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Int Exam ID:</B>";	
+					T2Param2Title.innerHTML = "<B>Int Exception ID:</B>";					  
+				  break;
+				case 54:
+				  //CancelExamCaching
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Int Exam ID:</B>";	
+					T2Param2Title.innerHTML = "<B>Int Exception ID:</B>";					  
+				  break;
+				case 55:
+				  //DeleteCachedExam
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Int Exam ID:</B>";	
+					T2Param2Title.innerHTML = "<B>Int Exception ID:</B>";					  
+				  break;
+				case 56:
+				  //DisableAutoLogout
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Disable:</B>";				  
+				  break;
+				case 57:
+				  //ShowDebugWindow
+				  InvokeButtonTable.style.display = "inline";
+				  break;
+				case 58:
+				  //GetFoldersAndFilters
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Level:</B>";				  
+				  break;
+				  break;
+				case 59:
+				  //GetVersion
+				  InvokeButtonTable.style.display = "inline";
+				  break;
+				case 60:
+				  //FindException
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Exception Study UID:</B>";					  
+				  break;
+				case 61:
+				  //QueryEx
+					SQLQuery = "";					
+					QueryType = "QUERYEX";				  
+				  PopulateSelectList(window.SelectQueryColumn, QueryColumns);
+					PopulateSelectList(window.PrimarySort, QueryColumns);
+					PopulateSelectList(window.SecondarySort, QueryColumns);				  
+				  QueryTable.style.display = "inline";
+				  QueryExTable.style.display = "inline";
+				  QueryButtonTable.style.display = "inline";
+				  break;
+				case 62:
+				  //GetDICOMHeaders
+					ThreeParameterTable.style.display = "inline";
+					T3Param1Title.innerHTML = "<B>Study ID:</B>";
+					T3Param2Title.innerHTML = "<B>Series ID:</B>";
+					T3Param3Title.innerHTML = "<B>Image ID:</B>";					  
+				  break;
+				case 63:
+				  //GetDICOMPixels
+					EightParameterTable.style.display = "inline";
+					T8Param1Title.innerHTML = "<B>Study ID:</B>";
+					T8Param2Title.innerHTML = "<B>Series ID:</B>";
+					T8Param3Title.innerHTML = "<B>Image ID:</B>";		
+					T8Param4Title.innerHTML = "<B>Left:</B>";		
+					T8Param5Title.innerHTML = "<B>Top:</B>";		
+					T8Param6Title.innerHTML = "<B>Right:</B>";		
+					T8Param7Title.innerHTML = "<B>Bottom:</B>";		
+					T8Param8Title.innerHTML = "<B>Compression Ratio:</B>";		
+				  break;
+				case 64:
+					//ShowClinicalExamNotes
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>CanvasPage ID:</B>";	
+					T2Param2Title.innerHTML = "<B>Shelf ID:</B>";					
+					break;
+				case 65:
+					//SetShelfDragBarColor
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Shelf ID:</B>";	
+					T2Param2Title.innerHTML = "<B>Color:</B>";						
+					break;
+				case 66:
+					//CreatePopup
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Window ID:</B>";						
+					break;
+				case 67:
+					//DestroyPopup
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Window ID:</B>";					
+					break;					
+				case 70:
+					//SetShelfURL
+					ThreeParameterTable.style.display = "inline";
+					T3Param1Title.innerHTML = "<B>Shelf ID:</B>";
+					T3Param2Title.innerHTML = "<B>URL:</B>";
+					T3Param3Title.innerHTML = "<B>Report Width:</B>";					
+					break;
+				case 71:
+					//AddViewSubMenu
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>SubMenu Name:</B>";	
+					break;
+				case 72:
+					//AddViewSubMenuItem
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Menu Item Name:</B>";	
+					T2Param2Title.innerHTML = "<B>SubMenu Name:</B>";					
+					break;
+				case 73:
+					//InsertAfterViewSubMenu
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>SubMenu Name:</B>";	
+					T2Param2Title.innerHTML = "<B>Existing Menu Name:</B>";							
+					break;
+				case 74:
+					//InsertAfterViewSubMenuItem
+					ThreeParameterTable.style.display = "inline";
+					T3Param1Title.innerHTML = "<B>Menu Item Name:</B>";
+					T3Param2Title.innerHTML = "<B>SubMenu Name:</B>";
+					T3Param3Title.innerHTML = "<B>Existing SubMenu Item:</B>";						
+					break;
+				case 75:
+					//AddExamSubMenu
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>SubMenu Name:</B>";						
+					break;
+				case 76:
+					//AddExamSubMenuItem
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Menu Item Name:</B>";	
+					T2Param2Title.innerHTML = "<B>SubMenu Name:</B>";						
+					break;
+				case 77:
+					//InsertAfterExamSubMenu
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>SubMenu Name:</B>";	
+					T2Param2Title.innerHTML = "<B>Existing Menu Name:</B>";					
+					break;
+				case 78:
+					//InsertAfterExamSubMenuItem
+					ThreeParameterTable.style.display = "inline";
+					T3Param1Title.innerHTML = "<B>Menu Item Name:</B>";
+					T3Param2Title.innerHTML = "<B>SubMenu Name:</B>";
+					T3Param3Title.innerHTML = "<B>Existing SubMenu Item:</B>";					
+					break;
+				case 79:
+					//AddShelfSubMenu
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>SubMenu Name:</B>";						
+					break;
+				case 80:
+					//AddShelfSubMenuItem
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Menu Item Name:</B>";	
+					T2Param2Title.innerHTML = "<B>SubMenu Name:</B>";						
+					break;
+				case 81:
+					//InsertAfterShelfSubMenu
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>SubMenu Name:</B>";	
+					T2Param2Title.innerHTML = "<B>Existing Menu Name:</B>";					
+					break;
+				case 82:
+					//InsertAfterShelfSubMenuItem
+					ThreeParameterTable.style.display = "inline";
+					T3Param1Title.innerHTML = "<B>Menu Item Name:</B>";
+					T3Param2Title.innerHTML = "<B>SubMenu Name:</B>";
+					T3Param3Title.innerHTML = "<B>Existing SubMenu Item:</B>";					
+					break;
+				case 83:
+					//AddTimelineMenuItem
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>SubMenu Name:</B>";						
+					break;
+				case 84:
+					//InsertAfterTimelineMenuItem
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Menu Name:</B>";	
+					T2Param2Title.innerHTML = "<B>Existing Menu Name:</B>";					
+					break;
+				case 85:
+					//AddTimelineSubMenu
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>SubMenu Name:</B>";						
+					break;
+				case 86:
+					//AddTimelineSubMenuItem
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Menu Item Name:</B>";	
+					T2Param2Title.innerHTML = "<B>SubMenu Name:</B>";						
+					break;
+				case 87:
+					//InsertAfterTimelineSubMenu
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>SubMenu Name:</B>";	
+					T2Param2Title.innerHTML = "<B>Existing Menu Name:</B>";					
+					break;
+				case 88:
+					//InsertAfterTimelineSubMenuItem
+					ThreeParameterTable.style.display = "inline";
+					T3Param1Title.innerHTML = "<B>Menu Item Name:</B>";
+					T3Param2Title.innerHTML = "<B>SubMenu Name:</B>";
+					T3Param3Title.innerHTML = "<B>Existing SubMenu Item:</B>";					
+					break;
+				case 89:
+					//RemoveTimelineMenuItem
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Menu Name:</B>";							
+					break;
+				case 90:
+					//AddShelfButton
+					FourParameterTable.style.display = "inline";
+					T4Param1Title.innerHTML = "<B>Shelf ID:</B>";
+					T4Param2Title.innerHTML = "<B>Button Name:</B>";
+					T4Param3Title.innerHTML = "<B>Image Name:</B>";	
+					T4Param4Title.innerHTML = "<B>ToolTip:</B>";	
+					break;
+				case 91:
+					//ShowPreferenceDialog
+					InvokeButtonTable.style.display = "inline";
+					break;
+				case 92:
+					//DisplayiExportQueue
+				  InvokeButtonTable.style.display = "inline";					
+					break;
+				case 93:
+					//SetPluginVersion
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Plugin URL:</B>";	
+					T2Param2Title.innerHTML = "<B>Version:</B>";						
+					break;
+				case 94:
+					//CopyImageToClipboard
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Window ID:</B>";					
+					break;
+				case 95:
+					//SavePresentationState
+					ThreeParameterTable.style.display = "inline";
+					T3Param1Title.innerHTML = "<B>Shelf ID:</B>";	
+					T3Param2Title.innerHTML = "<B>Description:</B>";		
+					T3Param3Title.innerHTML = "<B>Type:</B>";				
+					break;
+				case 96:
+					//LoadPresentationState
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Shelf ID:</B>";	
+					T2Param2Title.innerHTML = "<B>PS ID:</B>";					
+					break;
+				case 97:
+					//DeleteAnnotation
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Window ID:</B>";	
+					T2Param2Title.innerHTML = "<B>Annotation Token:</B>";						
+					break;
+				case 98:
+					//WriteDICOMInstance
+					ThreeParameterTable.style.display = "inline";
+					T3Param1Title.innerHTML = "<B>Window ID:</B>";	
+					T3Param2Title.innerHTML = "<B>Image UID:</B>";		
+					T3Param3Title.innerHTML = "<B>Path Name:</B>";							
+					break;
+			    case 99:
+					//DeCacheImage
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Study ID</B>";	
+					T2Param2Title.innerHTML = "<B>Image ID</B>";						
+					break;	
+				case 100:
+				    // CopyImageDataToClipboard		
+				    FiveParameterTable.style.display = "inline";
+					T5Param1Title.innerHTML = "<B>Shelf ID:</B>";	
+					T5Param2Title.innerHTML = "<B>Image UID:</B>";		
+					T5Param3Title.innerHTML = "<B>Save Annotations</B>";						
+					T5Param4Title.innerHTML = "<B>Save Overlays</B>";						
+					T5Param5Title.innerHTML = "<B>JPEG</B>";						
+					break;								
+				case 101:
+					//CopyWindowToPicture
+					FiveParameterTable.style.display = "inline";
+					T5Param1Title.innerHTML = "<B>Window ID:</B>";	
+					T5Param2Title.innerHTML = "<B>Left:</B>";	
+					T5Param3Title.innerHTML = "<B>Top:</B>";	
+					T5Param4Title.innerHTML = "<B>Right:</B>";	
+					T5Param5Title.innerHTML = "<B>Bottom:</B>";						
+					break;
+				case 102:
+					//CopyImageToPicture
+					FiveParameterTable.style.display = "inline";
+					T5Param1Title.innerHTML = "<B>Window ID:</B>";	
+					T5Param2Title.innerHTML = "<B>Left:</B>";	
+					T5Param3Title.innerHTML = "<B>Top:</B>";	
+					T5Param4Title.innerHTML = "<B>Right:</B>";	
+					T5Param5Title.innerHTML = "<B>Bottom:</B>";						
+					break;
+				case 103:
+					//MarkExamRead
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Int ExamID:</B>";	
+					break;	
+				case 104:
+					//ShowiQueryWindow
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>Int PatientID:</B>";	
+					break;										
+				case 105:
+					//LockExam
+					TwoParameterTable.style.display = "inline";
+					T2Param1Title.innerHTML = "<B>Int ExamID:</B>";	
+					T2Param2Title.innerHTML = "<B>Lock/Unlock:</B>";						
+					break;										
+				case 106:
+					//GetAvailableLanguages
+					InvokeButtonTable.style.display = "inline";	
+					break;										
+				case 107:
+					//SetLanguage
+					OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>LCID:</B>";	
+					break;	
+				case 108:
+				    //GetListOfKeyImages
+                    OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>ShelfID:</B>";	
+					break;					    		
+				case 109:
+				    //GetPresentationStates
+                    OneParameterTable.style.display = "inline";
+					T1Param1Title.innerHTML = "<B>ShelfID:</B>";	
+					break;			    		
+											
+				default:
+					return;
+			}
+		}
+
+		//This is a generic function to handle the Invoke button for tables T1 through T8 (where T1 is a table
+		//with 1 parameter and T8 is a table with 8 parameters).
+		function Invoke(TableType)
+		{	
+			ClearParams();
+			
+			switch(TableType)
+			{
+				case 0:
+					break;
+				case 1:
+					Param1 = document.all("T1Input1").value;
+					break;
+				case 2:
+					Param1 = document.all("T2Input1").value;
+					Param2 = document.all("T2Input2").value;
+					break;
+				case 3:
+					Param1 = document.all("T3Input1").value;
+					Param2 = document.all("T3Input2").value;
+					Param3 = document.all("T3Input3").value;
+					break;
+				case 4:
+					Param1 = document.all("T4Input1").value;
+					Param2 = document.all("T4Input2").value;
+					Param3 = document.all("T4Input3").value;
+					Param4 = document.all("T4Input4").value;
+					break;
+				case 5:
+					Param1 = document.all("T5Input1").value;
+					Param2 = document.all("T5Input2").value;
+					Param3 = document.all("T5Input3").value;
+					Param4 = document.all("T5Input4").value;
+					Param5 = document.all("T5Input5").value;
+					break;
+				case 6:
+					Param1 = document.all("T6Input1").value;
+					Param2 = document.all("T6Input2").value;
+					Param3 = document.all("T6Input3").value;
+					Param4 = document.all("T6Input4").value;
+					Param5 = document.all("T6Input5").value;
+					Param6 = document.all("T6Input6").value;
+					break;
+				case 7:
+					Param1 = document.all("T7Input1").value;
+					Param2 = document.all("T7Input2").value;
+					Param3 = document.all("T7Input3").value;
+					Param4 = document.all("T7Input4").value;
+					Param5 = document.all("T7Input5").value;
+					Param6 = document.all("T7Input6").value;
+					Param7 = document.all("T7Input7").value;					
+					break;
+				case 8:
+					Param1 = document.all("T8Input1").value;
+					Param2 = document.all("T8Input2").value;
+					Param3 = document.all("T8Input3").value;
+					Param4 = document.all("T8Input4").value;
+					Param5 = document.all("T8Input5").value;
+					Param6 = document.all("T8Input6").value;
+					Param7 = document.all("T8Input7").value;
+					Param8 = document.all("T8Input8").value;
+					break;										
+				default:
+					break;
+			}
+			
+			//Call the appropriate method.
+			switch(CurrentOperation)
+			{
+				case 0: 		
+					break;
+				case 1:
+					ChangePassword(Param1, Param2);
+					break;
+				case 4:
+					FindPatient(Param1, Param2);
+					break;
+				case 5:
+					FindExam(Param1, Param2, Param3);
+					break;
+				case 6:
+					FindStudy(Param1);
+					break;	
+				case 7:
+					GetReportData(Param1, Param2);
+					break;		
+				case 8:	
+					SetPreference(Param1, Param2, Param3);
+					break;
+				case 9:
+					GetPreference(Param1, Param2);
+					break;
+				case 10:
+					ListCanvasPages();
+					break;
+				case 11:
+					OpenCanvasPage(Param1, Param2, Param3, Param4, Param5);
+					break;
+				case 12:
+					GetCanvasPageStatus(Param1);
+					break;
+				case 13:
+					CloseCanvasPage(Param1, Param2);
+					break;
+				case 14:
+					ListShelfs(Param1);
+					break;
+				case 15:
+					OpenShelf(Param1, Param2, Param3, Param4);
+					break;
+				case 16:
+					GetShelfStatus(Param1);
+					break;
+				case 17:
+					CloseShelf(Param1);
+					break;
+				case 18:
+					AddViewMenuItem(Param1);
+					break;
+				case 19:
+					RemoveViewMenuItem(Param1);
+					break;
+				case 20:
+					InsertAfterViewMenuItem(Param1, Param2);
+					break;
+				case 21:
+					AddExamMenuItem(Param1);
+					break;
+				case 22:
+					RemoveExamMenuItem(Param1);
+					break;
+				case 23:
+					InsertAfterExamMenuItem(Param1, Param2);
+					break;
+				case 24:
+					AddShelfMenuItem(Param1);
+					break;
+				case 25:
+					RemoveShelfMenuItem(Param1);
+					break;
+				case 26:
+					InsertAfterShelfMenuItem(Param1, Param2);
+					break;
+				case 27:
+					CopyToClipboard(Param1);
+					break;
+				case 28:
+					GetShelfWindowIDs(Param1);
+					break;
+				case 29:
+					GetWindowContext(Param1);
+					break;
+				case 30:
+					GetDICOMValue(Param1, Param2);
+					break;
+				case 31:
+					GetDICOMInstance(Param1, Param2);
+					break;
+				case 32:
+					reset();
+					break;
+				case 33:
+					DisplayMediaExportPage(Param1, Param2);
+					break;
+				case 34:
+					SetWindowImage(Param1, Param2);
+					break;
+				case 35:
+					SetWindowView(Param1, Param2, Param3, Param4, Param5, Param6);
+					break;
+				case 36:
+					GetStaticWindowInfo(Param1);
+					break;
+				case 37:
+					GetActiveWindow();
+					break;
+				case 38:
+					SetMarkRead(Param1, Param2);
+					break;
+				case 39:
+					GetCurrentUser(); 
+					break;
+				case 40:
+					AddPreferencePage(Param1, Param2, Param3);
+					break;
+				case 41:
+					EnablePreferenceApplyButton();
+					break;
+				case 42:
+					MessageBox(Param1, Param2);  
+					break;
+				case 43:
+					SetActivePage(Param1, Param2); 
+					break;
+				case 44:
+					FindShelfID(Param1);
+					break;
+				case 45:
+					FindCanvasPageID(Param1);
+					break;
+				case 46:
+					Logout();
+					break;
+				case 47:
+					ListMediaExportExams();
+					break;
+				case 49:
+				  GetWorkstationLocations();
+				  break;
+				case 50:
+				  GetAuthSources();
+				  break;
+				case 51:
+				  GetCachedExams();
+				  break;
+				case 52:
+				  CacheExam(Param1, Param2, Param3);
+				  break;
+				case 53:
+				  ResumeCachingExam(Param1, Param2);
+				  break;
+				case 54:
+				  CancelExamCaching(Param1, Param2);
+				  break;
+				case 55:
+				  DeleteCachedExam(Param1, Param2);
+				  break;
+				case 56:
+				  DisableAutoLogout(Param1);
+				  break;
+				case 57:
+				  ShowDebugWindow();
+				  break;
+				case 58:
+				  GetFoldersAndFiltersXML(Param1);
+				  break;
+				case 59:
+				  GetVersion();
+				  break;
+				case 60:
+				  FindException(Param1);
+				  break;
+				case 61:
+				  QueryEx();
+				  break;
+				case 62:
+				  GetDICOMHeaders(Param1, Param2, Param3);
+				  break;
+				case 63:
+				  GetDICOMPixels(Param1, Param2, Param3, Param4, Param5, Param6, Param7, Param8); 
+				  break;					
+				case 64:
+					ShowClinicalExamNotes(Param1, Param2);
+					break;
+				case 65:
+					SetShelfDragBarColor(Param1, Param2);
+					break;
+				case 66:
+					CreatePopup(Param1);
+					break;
+				case 67:
+					DestroyPopup(Param1);
+					break;					
+				case 70:
+					SetShelfURL(Param1, Param2, Param3);
+					break;
+				case 71:
+					AddViewSubMenu(Param1);
+					break;
+				case 72:
+					AddViewSubMenuItem(Param1, Param2);
+					break;
+				case 73:
+					InsertAfterViewSubMenu(Param1, Param2);
+					break;
+				case 74:
+					InsertAfterViewSubMenuItem(Param1, Param2, Param3);
+					break;
+				case 75:
+					AddExamSubMenu(Param1);
+					break;
+				case 76:
+					AddExamSubMenuItem(Param1, Param2);
+					break;
+				case 77:
+					InsertAfterExamSubMenu(Param1, Param2);
+					break;
+				case 78:
+					InsertAfterExamSubMenuItem(Param1, Param2, Param3);
+					break;
+				case 79:
+					AddShelfSubMenu(Param1);
+					break;
+				case 80:
+					AddShelfSubMenuItem(Param1, Param2);
+					break;
+				case 81:
+					InsertAfterShelfSubMenu(Param1, Param2);
+					break;
+				case 82:
+					InsertAfterShelfSubMenuItem(Param1, Param2, Param3);
+					break;
+				case 83:
+					AddTimelineMenuItem(Param1);
+					break;
+				case 84:
+					InsertAfterTimelineMenuItem(Param1, Param2);
+					break;
+				case 85:
+					AddTimelineSubMenu(Param1);
+					break;
+				case 86:
+					AddTimelineSubMenuItem(Param1, Param2);
+					break;
+				case 87:
+					InsertAfterTimelineSubMenu(Param1, Param2);
+					break;
+				case 88:
+					InsertAfterTimelineSubMenuItem(Param1, Param2, Param3);
+					break;
+				case 89:
+					RemoveTimelineMenuItem(Param1);
+					break;
+				case 90:
+					AddShelfButton(Param1, Param2, Param3, Param4);
+					break;
+				case 91:
+					ShowPreferenceDialog();
+					break;
+				case 92:
+					DisplayiExportQueue();
+					break;
+				case 93:
+					SetPluginVersion(Param1, Param2);
+					break;
+				case 94:
+					CopyImageToClipboard(Param1, Param2);
+					break;
+				case 95:
+					SavePresentationState(Param1, Param2, Param3);
+					break;
+				case 96:
+					LoadPresentationState(Param1, Param2);
+					break;
+				case 97:
+					DeleteAnnotation(Param1, Param2);
+					break;
+				case 98:
+					WriteDICOMInstance(Param1, Param2, Param3);
+					break;
+				case 99:
+				    DeCacheImage(Param1, Param2);
+					break;	
+				case 100:
+				    CopyImageDataToClipboard(Param1, Param2, Param3, Param4, Param5);
+				    break;
+				case 101:
+					CopyWindowToPicture(Param1, Param2, Param3, Param4, Param5);
+					break;
+				case 102:
+					CopyImageToPicture(Param1, Param2, Param3, Param4, Param5);
+					break;
+				case 103:
+					MarkExamRead(Param1);
+					break;
+				case 104:
+					ShowiQueryWindow(Param1);
+					break;											
+				case 105:
+					LockExam(Param1, Param2);
+					break;											
+				case 106:
+					GetAvailableLanguages();
+					break;											
+				case 107:
+					SetLanguage(Param1);
+					break;		
+				case 108:
+				    GetListOfKeyImages(Param1);
+				    break;
+				case 109:
+				    GetPresentationStates(Param1);
+				    break;								
+				default:
+					break;
+			}
+			ClearInputFields();
+			ClearParams();
+		}
+
+		// This method calls the selected Query API method using the selected query type. 
+		function PerformQuery()
+		{
+			OutputWindowDiv.innerHTML = "";
+			EventOutputDiv.innerHTML = "";
+			if (SQLQuery == "")
+			{
+				OutputWindowDiv.innerHTML = "<B>" + "Please create a query string before invoking the query method." + "</B>";
+				return;
+			}
+			
+			var QueryRetVal = "";
+			if (QueryType == "QUERY")
+			{
+				QueryRetVal = Radiology.Query(SQLQuery, SQLQueryType, 100);
+			}
+			else if (QueryType == "QUERYEX")
+			{
+				var primSortOrder, secSortOrder;
+				
+				//use proper options array depending on query type
+				var columnArray = ("EXCEPTION" == SQLQueryType) ? QueryExcColumns : QueryColumns;
+
+				var primSortKey = columnArray[window.PrimarySort.selectedIndex][0];				
+				var secSortKey = columnArray[window.SecondarySort.selectedIndex][0];
+				primSortOrder = (window.primaryUp.checked) ? "0" : "1";
+				secSortOrder = (window.secondaryUp.checked) ? "0" : "1";
+
+				QueryRetVal = Radiology.QueryEx(SQLQuery, SQLQueryType, primSortKey, primSortOrder, secSortKey, secSortOrder, 100);
+			
+			}
+			else if (QueryType == "EXISTS")
+			{
+				QueryRetVal = Radiology.Exists(SQLQuery, SQLQueryType);
+				if (QueryRetVal == 0)
+				{
+					var error = Radiology.GetLastErrorCode();
+					OutputWindowDiv.innerHTML = "<B>" + "No exams found, last Error Code = " + error + "</B>";
+					return;
+				}
+				OutputWindowDiv.innerHTML = "<B>" + "Number of Exams = " + QueryRetVal + "</B>";
+				return;
+			}
+				
+			if (QueryRetVal == "")
+			{
+				var error = Radiology.GetLastErrorCode();
+				OutputWindowDiv.innerHTML = "<B>" + "Last Error Code" + error + "</B>";
+			}
+			else
+			{
+				var XMLDomDoc = xmldso.XMLDocument;
+				XMLDomDoc.loadXML(QueryRetVal);
+				var nodeList = XMLDomDoc.getElementsByTagName("QueryResult");
+				var TotalReturns = nodeList.item(0).selectSingleNode("TotalReturns").text;
+				if (TotalReturns == "0")
+				{
+					strOutput = "No results";
+					OutputWindowDiv.innerHTML = "<B>" + strOutput + "</B>";
+					return;
+				}
+				var nodeList = XMLDomDoc.getElementsByTagName("Exam");
+
+				var strOutput = "Number of records returned = " + TotalReturns + "<BR><BR>";
+				
+				if (SQLQueryType != "EXCEPTION")
+				{
+					for (i = 0; i < TotalReturns; i++) 
+					{
+						var x00100010				= nodeList.item(i).selectSingleNode("x00100010").text;
+						var x00100020				= nodeList.item(i).selectSingleNode("x00100020").text;
+						var x00100030				= nodeList.item(i).selectSingleNode("x00100030").text;
+						var x00100040					= nodeList.item(i).selectSingleNode("x00100040").text;
+						var StudyDTTM				= nodeList.item(i).selectSingleNode("StudyDTTM").text;
+						var x00080050				= nodeList.item(i).selectSingleNode("x00080050").text;
+						var x00080090			= nodeList.item(i).selectSingleNode("x00080090").text;
+						var x00180015				= nodeList.item(i).selectSingleNode("x00180015").text;
+						var x00080060				= nodeList.item(i).selectSingleNode("x00080060").text;
+						var x00081032_1				= nodeList.item(i).selectSingleNode("x00081032_1").text;
+						var x00081032_2			= nodeList.item(i).selectSingleNode("x00081032_2").text;
+						var x00081080			= nodeList.item(i).selectSingleNode("x00081080").text;
+						var IsStatExamFLAG			= nodeList.item(i).selectSingleNode("IsStatExamFLAG").text;
+						var IDXExamStatus		= nodeList.item(i).selectSingleNode("IDXExamStatus").text;
+						var LockStatus			= nodeList.item(i).selectSingleNode("LockStatus").text;
+						var PatientLocation			= nodeList.item(i).selectSingleNode("PatientLocation").text;
+						var HasImagesFLAG		= nodeList.item(i).selectSingleNode("HasImagesFLAG").text;
+						var IDXIntReferringPhysID	= nodeList.item(i).selectSingleNode("IDXIntReferringPhysID").text;
+						var IDXIntPatientID			= nodeList.item(i).selectSingleNode("IDXIntPatientID").text;
+						var IDXIntExamID			= nodeList.item(i).selectSingleNode("IDXIntExamID").text;
+						var OrganizationCode		= nodeList.item(i).selectSingleNode("OrganizationCode").text;
+						var SubspecialityCode		= nodeList.item(i).selectSingleNode("SubspecialityCode").text;
+						var ExamReadFLAG			= nodeList.item(i).selectSingleNode("ExamReadFLAG").text;
+						var PerformingResource = nodeList.item(i).selectSingleNode("PerformingResource").text;
+					
+						strOutput += "Patient Name: " + x00100010 + "<BR>";
+						strOutput += "Patient ID: " + x00100020 + "<BR>";
+						strOutput += "Patient's Birth Date: " + x00100030 + "<BR>";
+						strOutput += "Patient's Sex: " + x00100040 + "<BR>";
+						strOutput += "Exam Date and Time: " + StudyDTTM + "<BR>";
+						strOutput += "Accession ID: " + x00080050 + "<BR>";
+						strOutput += "Referring Physician's Name: " + x00080090 + "<BR>";
+						strOutput += "BodyPart: " + x00180015 + "<BR>";
+						strOutput += "Modality: " + x00080060 + "<BR>";
+						strOutput += "Procedure Code: " + x00081032_1 + "<BR>";
+						strOutput += "Procedure Description: " + x00081032_2 + "<BR>";
+						strOutput += "Admitting Diagnosis: " + x00081080 + "<BR>";
+						strOutput += "Stat: " + IsStatExamFLAG + "<BR>";
+						strOutput += "Exam Status: " + IDXExamStatus + "<BR>";
+						strOutput += "LockStatus: " + LockStatus + "<BR>";
+						strOutput += "Patient Location: " + PatientLocation + "<BR>";
+						strOutput += "Has Images: " + HasImagesFLAG + "<BR>";
+						strOutput += "Referring Physician ID: " + IDXIntReferringPhysID + "<BR>";
+						strOutput += "Unique Patient ID: " + IDXIntPatientID + "<BR>";
+						strOutput += "Unique Exam ID: " + IDXIntExamID + "<BR>";
+						strOutput += "Organization Code: " + OrganizationCode + "<BR>";
+						strOutput += "Subspeciality Code: " + SubspecialityCode + "<BR>";
+						strOutput += "Exam Read FLAG: " + ExamReadFLAG + "<BR>";
+						strOutput += "Performing Resource: " + PerformingResource + "<BR>";
+						strOutput += "<BR><BR>";
+					}
+				
+					OutputWindowDiv.innerHTML = "<B>" + strOutput + "</B>";
+				}
+				else if (SQLQueryType == "EXCEPTION")
+				{
+					for (i = 0; i < TotalReturns; i++) 
+					{
+						var x00100010				= nodeList.item(i).selectSingleNode("x00100010").text;
+						var x00100020				= nodeList.item(i).selectSingleNode("x00100020").text;
+						var x00100030				= nodeList.item(i).selectSingleNode("x00100030").text;
+						var x00100040						= nodeList.item(i).selectSingleNode("x00100040").text;
+						var x0020000D				= nodeList.item(i).selectSingleNode("x0020000D").text;
+						var StudyDTTM				= nodeList.item(i).selectSingleNode("StudyDTTM").text;
+						var x00081030				= nodeList.item(i).selectSingleNode("x00081030").text;
+						var x00080050			= nodeList.item(i).selectSingleNode("x00080050").text;
+						var x00180015				= nodeList.item(i).selectSingleNode("x00180015").text;
+						var x00080060				= nodeList.item(i).selectSingleNode("x00080060").text;
+						var x00081032_1				= nodeList.item(i).selectSingleNode("x00081032_1").text;
+						var x00081032_2			= nodeList.item(i).selectSingleNode("x00081032_2").text;
+						var IDXIntExceptionID		= nodeList.item(i).selectSingleNode("IDXIntExceptionID").text;
+					
+						strOutput += "Patient Name: " + x00100010 + "<BR>";
+						strOutput += "Patient ID: " + x00100020 + "<BR>";
+						strOutput += "Patient's Birth Date: " + x00100030 + "<BR>";
+						strOutput += "Patient's Sex: " + x00100040 + "<BR>";
+						strOutput += "Study Instance UID: " + x0020000D + "<BR>";
+						strOutput += "Exam Date and Time: " + StudyDTTM + "<BR>";
+						strOutput += "Accession ID: " + x00080050 + "<BR>";
+						strOutput += "Study Description: " + x00081030 + "<BR>";
+						strOutput += "BodyPart: " + x00180015 + "<BR>";
+						strOutput += "Modality: " + x00080060 + "<BR>";
+						strOutput += "Procedure Code: " + x00081032_1 + "<BR>";
+						strOutput += "Procedure Description: " + x00081032_2 + "<BR>";
+						strOutput += "Unique exception ID number: " + IDXIntExceptionID + "<BR>";
+						strOutput += "<BR><BR>";
+					}
+				
+					OutputWindowDiv.innerHTML = "<B>" + strOutput + "</B>";
+				}
+			}
+		}
+		
+		//Displays or previews the query string in the web browser window. 
+		function PreviewQuery()
+		{
+			OutputWindowDiv.innerHTML = "<B>" + SQLQuery + "</B>";
+		}
+
+		//Create the initial query string. This method is called when the query string is initially created and set. 
+		function CreateInitialQuery()
+		{
+			ClearQueryResults();
+			SQLQueryType = window.SelectQueryType[window.SelectQueryType.selectedIndex].text;
+			
+			//use proper options array depending on query type
+			var columnArray = ("EXCEPTION" == SQLQueryType) ? QueryExcColumns : QueryColumns;
+			
+			var SQLColumn = columnArray[window.SelectQueryColumn.selectedIndex][0];
+			var SQLOperator = window.QueryOperators[window.QueryOperators.selectedIndex].text;	
+			var SQLParam = window.QueryParam.value;
+			var SQLParam2 = window.QueryParam2.value;
+			
+			if (SQLParam == "")
+			{
+				OutputWindowDiv.innerHTML = "<B>" + "Please enter at least one query parameter." + "</B>";
+			}
+			
+			if (SQLOperator == "BETWEEN" && SQLParam2 == "")
+			{
+				OutputWindowDiv.innerHTML = "<B>" + "Please enter both parameters when using the \"BETWEEN\" operator." + "</B>";
+				return;
+			}
+
+			if (SQLOperator == "BETWEEN")
+			{
+				SQLQuery = SQLColumn + " " + SQLOperator + " " + "\"" + SQLParam + "\"" + " AND " + "\"" + SQLParam2 + "\"";
+			}
+			else if (SQLOperator == "IN")
+			{
+				if (SQLParam.indexOf(0) != "(")
+				{
+					var Param = "(" + SQLParam + ")";
+					SQLParam = Param;
+				}
+				
+				SQLQuery = SQLColumn + " " + SQLOperator + SQLParam;
+			}
+			else
+			{
+				SQLQuery = SQLColumn + " " + SQLOperator + " " + "\"" + SQLParam + "\"";
+			}
+		}
+
+		//Empty the Query string and clear the query results area. 
+		function ResetQuery()
+		{
+			SQLQuery = "";
+			OutputWindowDiv.innerHTML = "<B>" + SQLQuery + "</B>";
+		}
+
+		//This function handles the adding of new conditions to the Query string. 
+		function AddQueryCondition()
+		{
+			ClearQueryResults();
+			var SQLColumn = window.QueryColumns[window.SelectQueryColumn.selectedIndex][0];
+			var SQLOperator = window.QueryOperators[window.QueryOperators.selectedIndex].text;	
+			var SQLParam = QueryParam.value;
+			var SQLParam2 = QueryParam2.value;
+			
+			if (SQLQuery == "")
+			{
+				OutputWindowDiv.innerHTML = "<B>" + "Please create an initial query before adding conditions." + "</B>";
+				return;
+			}
+			
+			if (SQLOperator == "BETWEEN" && SQLParam2 == "")
+			{
+				OutputWindowDiv.innerHTML = "<B>" + "Please enter both parameters when using the \"BETWEEN\" operator." + "</B>";
+				return;
+			}
+
+			if (SQLOperator == "BETWEEN")
+			{
+				SQLQuery = SQLColumn + " " + SQLOperator + " " + "\"" + SQLParam + "\"" + " AND " + "\"" + SQLParam2 + "\"";
+			}
+			else if (SQLOperator == "IN")
+			{
+				if (SQLParam.indexOf(0) != "(")
+				{
+					var Param = "(" + SQLParam + ")";
+					SQLParam = Param;
+				}
+				
+				SQLQuery = SQLColumn + " " + SQLOperator + SQLParam;
+			}
+			else
+			{
+				SQLQuery = SQLColumn + " " + SQLOperator + " " + "\"" + SQLParam + "\"";
+			}
+		}
+
+		//Clear the Query results area in the browser window. 
+		function ClearQueryResults()
+		{
+			OutputWindowDiv.innerHTML = "";
+			EventOutputDiv.innerHTML = "";
+		}
+
+		//This method will display some helpful hints when the user selects the BETWEEN or IN operators. 
+		function ShowSQLHelpMessage()
+		{
+			var SQLOperator = window.QueryOperators[window.QueryOperators.selectedIndex].text;	
+			if (SQLOperator == "BETWEEN")
+			{
+				OutputWindowDiv.innerHTML = "<B>" + "Please use the \"Additional Query Parameter\" input box when using the BETWEEN operator" + "</B>";
+			}
+			else if (SQLOperator == "IN")
+			{
+				OutputWindowDiv.innerHTML = "<B>" + "Please provide a comma separated list with the IN option. For example, 1000,2000,3000,4000" + "</B>";
+			}
+		}
+
+		//method for onload page event
+		function InitializePage()
+		{
+			HideAllTables();
+			PopulateSelectList(window.Select1, MethodSelect);
+		}
+		
+		//Hides all tables in the display. 
+		function HideAllTables()
+		{
+			
+			OneParameterTable.style.display = "none";
+			TwoParameterTable.style.display = "none";
+			ThreeParameterTable.style.display = "none";
+			FourParameterTable.style.display = "none";
+			FiveParameterTable.style.display = "none";
+			SixParameterTable.style.display = "none";
+			SevenParameterTable.style.display = "none";
+			EightParameterTable.style.display = "none";
+			QueryTable.style.display = "none";
+			QueryExTable.style.display = "none";
+			QueryButtonTable.style.display = "none";
+			InvokeButtonTable.style.display = "none";
+			if (! eventAnnotationEnable.checked)
+			{
+				AnnotationEventOutput.style.display = "none";
+			}
+		}
+		
+		//Empty out the API method parmeters. 
+		function ClearParams()
+		{
+			Param1 = "";
+			Param2 = "";
+			Param3 = "";
+			Param4 = "";
+			Param5 = "";
+			Param6 = "";
+			Param7 = "";
+			Param8 = "";
+		}
+		
+		function ClearInputFields()
+		{
+			document.all("T1Input1").value = "";
+			document.all("T2Input1").value = "";
+			document.all("T2Input2").value = "";
+			document.all("T3Input1").value = "";
+			document.all("T3Input2").value = "";
+			document.all("T3Input3").value = "";
+			document.all("T4Input1").value = "";
+			document.all("T4Input2").value = "";
+			document.all("T4Input3").value = "";
+			document.all("T4Input4").value = "";
+			document.all("T5Input1").value = "";
+			document.all("T5Input2").value = "";
+			document.all("T5Input3").value = "";
+			document.all("T5Input4").value = "";
+			document.all("T5Input5").value = "";
+			document.all("T6Input1").value = "";
+			document.all("T6Input2").value = "";
+			document.all("T6Input3").value = "";
+			document.all("T6Input4").value = "";
+			document.all("T6Input5").value = "";
+			document.all("T6Input6").value = "";
+			document.all("T7Input1").value = "";
+			document.all("T7Input2").value = "";
+			document.all("T7Input3").value = "";
+			document.all("T7Input4").value = "";
+			document.all("T7Input5").value = "";
+			document.all("T7Input6").value = "";
+			document.all("T7Input7").value = "";
+			document.all("T8Input1").value = "";
+			document.all("T8Input2").value = "";
+			document.all("T8Input3").value = "";
+			document.all("T8Input4").value = "";
+			document.all("T8Input5").value = "";
+			document.all("T8Input6").value = "";			
+			document.all("T8Input7").value = "";				
+			document.all("T8Input8").value = "";			
+			document.all("QueryParam").value = "";
+			document.all("QueryParam2").value = "";
+			
+		}
+		
+		//changes the contents of the QueryColumn Select elements based on the QueryType
+		function SetQuerySelectOptions()
+		{
+			if ("EXCEPTION" == window.SelectQueryType[window.SelectQueryType.selectedIndex].text)
+			{
+				PopulateSelectList(window.SelectQueryColumn, QueryExcColumns);
+				if (QueryType == "QUERYEX")
+				{
+					PopulateSelectList(window.PrimarySort, QueryExcColumns);
+					PopulateSelectList(window.SecondarySort, QueryExcColumns);
+				}
+			}
+			else
+			{
+				PopulateSelectList(window.SelectQueryColumn, QueryColumns);
+				if (QueryType == "QUERYEX")
+				{
+					PopulateSelectList(window.PrimarySort, QueryColumns);
+					PopulateSelectList(window.SecondarySort, QueryColumns);
+				}				
+			}
+		}
+		
+		function EventAnnotationCheckboxClick()
+		{
+			if (eventAnnotationEnable.checked)
+			{
+				AnnotationEventOutput.value = "Annotation Events will output to this text area.\n";
+				AnnotationEventOutput.style.display = "inline";
+			}
+			else
+			{
+				AnnotationEventOutput.value = "";
+				AnnotationEventOutput.style.display = "none";
+			}
+		}
+		
+		
+        </SCRIPT>
+		
+		<SCRIPT LANGUAGE="VBScript">
+		
+		''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+		Sub GetDICOMInstance(P1, P2)
+			if (P1 = "") Or (P2 = "") Then
+                OutputWindowDiv.innerHTML = "<B>Unexpected empty parameters</B>"	
+                Exit Sub
+            End If
+
+			strOutput = ""
+			Dim size
+			size = 0
+    	    Dim ImageData
+    	    Dim i 
+    	    ImageData = 0
+    	    error = ""
+			size = Radiology.GetDICOMInstance(P1, P2, ImageData)
+			If size > 0 Then
+				OutputWindowDiv.innerHTML = "<B>GetDICOMInstance Successful.  Size of DICOM DATA: " & size & "</B>"	
+			Else
+				error = Radiology.GetLastErrorCode()
+				OutputWindowDiv.innerHTML = "<B>GetDICOMInstance Failed. Last Error Code: " & error & "</B>"
+			End If
+		
+		End Sub
+		
+		''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+		Sub GetDICOMHeaders(P1, P2, P3)
+            if (P1 = "") Or (P2 = "") Or (P3 = "") Then
+                OutputWindowDiv.innerHTML = "<B>Unexpected empty parameters</B>"	
+                Exit Sub
+            End If
+			strOutput = ""
+			Dim length
+			length = 0
+    	Dim HeaderData
+    	Dim i 
+    	ImageData = 0
+    	error = ""
+			length = Radiology.GetDICOMHeaders(P1, P2, P3, HeaderData)
+			If length > 0 Then
+				OutputWindowDiv.innerHTML = "<B>GetDICOMHeaders Successful.  Length of DICOM Header Data: " & length & "</B>"	
+			Else
+				error = Radiology.GetLastErrorCode()
+				OutputWindowDiv.innerHTML = "<B>GetDICOMHeaders Failed. Last Error Code: " & error & "</B>"
+			End If
+		
+		End Sub		
+		
+		''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+		Sub GetDICOMPixels(P1, P2, P3, P4, P5, P6, P7, P8)
+            if (P1 = "") Or (P2 = "") Or (P3 = "") Then
+                OutputWindowDiv.innerHTML = "<B>Unexpected empty parameters</B>"	
+                Exit sub
+            End If
+			strOutput = ""
+			Dim length
+			length = 0
+    	    Dim PixelData
+    	    Dim i 
+    	    PixelData = 0
+    	    error = ""
+			length = Radiology.GetDICOMPixels(P1, P2, P3, P4, P5, P6, P7, P8, PixelData)
+			If length > 0 Then
+				OutputWindowDiv.innerHTML = "<B>GetDICOMPixels Successful.  Length of DICOM Pixel Data: " & length & "</B>"	
+			Else
+				error = Radiology.GetLastErrorCode()
+				OutputWindowDiv.innerHTML = "<B>GetDICOMPixels Failed. Last Error Code: " & error & "</B>"
+			End If
+		
+		End Sub			
+		''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+		
+		Function Radiology_EventQueryLogout()
+	    Dim allowLogout
+	    if eventEnable.checked = False then
+				exit function
+			end if
+		
+			allowLogout = Radiology.MessageBox("EventQueryLogout fired.  Block client log out?", 4) '4 = vbYesNo
+			'determine return value
+			if allowLogout = 6 then 'vbYes
+				Radiology_EventQueryLogout = TRUE
+			elseif allowLogout = 7 then 'vbNo
+				Radiology_EventQueryLogout = FALSE
+			end if
+			
+		End Function		
+		
+		</SCRIPT>
+
+	<!-- Let's use some style sheet properties to enhance the GUI presentation.  -->
+	<style type="text/css"> .Tahoma { font-family: Tahoma; font-size: 14px; }
+	.TahomaList { font-family: Tahoma; font-size: 12px; font-weight: bold; }
+	.ButtonStyle { border-top: 1px; border-bottom: 1px; border-left: 1px; border-right: 1px; border: 1px solid #666666; cursor: hand; color: #000000; font-family: Tahoma; font-size: 13px; }
+	</style>
+	</HEAD>
+	<BODY background="images\EchoSmush.gif" onload="InitializePage();">
+		<OBJECT id="xmldso" height="0" width="0" classid="clsid:550dda30-0541-11d2-9ca9-0060b0ec3d39" VIEWASTEXT>
+		</OBJECT>
+		<TABLE class="Tahoma" id="MainTable" cellSpacing="0" cellPadding="0" width="100%" border="0">
+			<TR>
+				<TD colSpan="3"><BR>
+				</TD>
+			</TR>
+			<TR>
+				<TD align="middle" colSpan="3"><IMG src="images/UpdateDialog.bmp"></TD>
+			</TR>
+			<TR>
+				<TD colSpan="3"><BR>
+				</TD>
+			</TR>
+			<TR>
+				<TD colSpan="3">This Plug-In demonstrates the iSite Radiology API. To use this 
+					Plug-In, add it as a plug in using the system preferences. Logoff and log back in
+					and select an API method from the dropdown list (just beneath the down 
+					arrow). If parameters are required for the API call, you will be presented with 
+					a user interface to enter the parameter values. 
+					Once you fill in the required parameters, the Invoke button will be enabled; 
+					Clicking it will perform the specified API method. Event notifications are 
+					already handled in the JavaScript code section of this Web page. To enable events,
+					check the appropriate events checkbox below the events list.  If an invoked 
+					method causes an event to fire, a message box will immediately display the 
+					results. For your information, the events are also listed below.
+				</TD>
+			</TR>
+			<TR>
+				<TD width="442"><BR>
+					<B><U>The supported Events are</U></B>:
+					<TABLE class="TahomaList" id="EventTable" cellSpacing="0" cellPadding="0" width="100%" border="0">
+						<TR>
+							<BR>
+							<TD>
+								<UL type="square">
+									<LI>
+										EventShelfMenuSelected
+									<LI>
+										EventViewMenuSelected
+									<LI>
+										EventShelfLoaded
+									<LI>
+										EventShelfClosed
+									<LI>
+										EventNewImagesArrived
+									<LI>
+										EventExamMarkedRead
+									<LI>
+										EventCanvasPageCreated
+									<LI>
+										EventCanvasPageClosed
+									<LI>
+										EventLogout
+									</LI>
+								</UL>
+							</TD>
+							<TD>
+								<UL type="square">
+									<LI>
+										EventPageStatus
+									<LI>
+										EventPreferencesApplied
+									<LI>
+										EventPreferencesApply
+									<LI>
+										EventMediaExportStarted
+									<LI>
+										EventMediaExportCancelled
+									<LI>
+										EventMediaExportError
+									<LI>
+										EventMediaExportComplete
+									<LI>
+										EventExamMenuSelected
+									<LI>
+										EventReportButtonClicked
+									</LI>
+								</UL>
+							</TD>
+							<TD>
+								<UL type="square">
+									<LI>
+										EventReportClosed
+									<LI>
+										EventShelfButton
+									<LI>
+										EventTimelineMenuSelected
+									<LI>
+										EventPreferenceHelp
+									<LI>
+										EventMediaExportPageClosed
+									<LI>
+										EventPresentationStateSaved
+									<LI>
+										EventPresentationStateLoaded
+									<LI>
+										EventImageWindowCreated										
+									</LI>
+								</UL>
+							</TD>
+							<TD>
+								<UL type="square">
+								<LI>
+									EventAnnotationCreated
+								<LI>
+									EventAnnotationModified
+								<LI>
+									EventAnnotationDeleted
+								<LI>
+									EventCacheItemAdded
+								<LI>
+									EventCacheItemDeleted
+								<LI>
+									EventCacheItemError
+								<LI>
+									EventCacheItemComplete										
+								<LI>
+									EventQueryLogout
+								</LI>
+								</UL>
+							</TD>
+						</TR>
+					</TABLE>
+					<DIV>
+						<TABLE>
+							<TR>
+								<TD><INPUT id="eventEnable" name="eventEnable" type="checkbox"></TD>
+								<TD class="TahomaList">Enable Event Messages</TD>
+							</TR>
+							<TR>
+								<TD><INPUT id="eventAnnotationEnable" name="eventAnnotationEnable" type="checkbox" onclick="EventAnnotationCheckboxClick();"></TD>
+								<TD class="TahomaList">Enable Annotation Event Messages</TD>
+							</TR>
+							<TR>
+								<TD></TD>
+								<TD>
+									<TEXTAREA id="AnnotationEventOutput" name="AnnotationEventOutput" wrap="off" rows="4" cols="60" ></TEXTAREA>
+								</TD>
+							</TR>
+						</TABLE>
+					</DIV>
+				</TD>
+				<TD><BR>
+					<BR>
+					<BR>
+				</TD>
+				<TD>
+					<BR>
+					<BR>
+					<BR>
+				</TD>
+			</TR>
+			<TR>
+				<TD align="middle" width="442"><IMG src="images/arrowdown.bmp"></TD>
+				<TD align="middle" width="60%"><BR>
+				</TD>
+				<TD width="20%"></TD>
+			</TR>
+			<TR>
+				<TD colSpan="2"><B>Note</B>: this code can be used or modified to create your own 
+					iSite Radiology Plug-Ins.
+				</TD>				
+			</TR>
+			<TR><TD><BR></TD></TR>
+			<TR>
+				<TD width="442"><SELECT id="Select1" onchange="GetSelection();" name="APISelect">
+					<!-- Options for select added dynamically at time of page load -->
+					</SELECT></TD>
+
+			</TR>
+			<TR>
+				<TD colSpan="3"><BR>
+				</TD>
+			</TR>
+			<TR>
+				<TD colSpan="3">
+					<HR>
+				</TD>
+			</TR>
+			<TR>
+				<TD colSpan="3"><BR>
+				</TD>
+			</TR>
+		</TABLE>
+
+		<!-- Table for running a query...both Query and Exists.-->
+		<DIV id="QueryTable">
+			<TABLE cellSpacing="0" cellPadding="1" border="0">
+				<TR>
+					<TD>
+						<B>Query Type:</B>	
+					</TD>
+					<TD colspan="2">
+						<SELECT id="SelectQueryType" name="SelectQueryType" onchange="SetQuerySelectOptions()">
+						<OPTION selected>LOOKUP</OPTION>
+						<OPTION>INTERPRETATION</OPTION>
+						<OPTION>REFERRING</OPTION>
+						<OPTION>EXCEPTION</OPTION>
+						</SELECT>
+					</TD>
+				</TR>
+				<TR>
+					<TD>
+						<B>Query Column:</B>
+					</TD>
+					<TD colspan="2"><SELECT id="SelectQueryColumn" name="SelectQueryColumn" >
+						<!-- Options for select added dynamically at time of QueryType selection-->
+						</SELECT>
+					</TD>
+				</TR>
+				<TR>
+					<TD>
+						<B>Query Operator:</B>
+					</TD>
+					<TD colspan="2">
+						<SELECT id="QueryOperators" name="QueryOperators" onchange="ShowSQLHelpMessage();">
+							<OPTION selected>LIKE</OPTION>
+							<OPTION>=</OPTION>
+							<OPTION>&lt;</OPTION>
+							<OPTION>&lt;=</OPTION>
+							<OPTION>&gt;</OPTION>
+							<OPTION>&gt;=</OPTION>
+							<OPTION>IN</OPTION>
+							<OPTION>BETWEEN</OPTION>
+						</SELECT>
+					</TD>
+				</TR>
+				<TR>
+					<TD><B>Query Parameter:</B></TD>
+					<TD colspan="2"><INPUT id="QueryParam" type="text" name="QueryParam">
+				</TD>
+				<TR>
+					<TD><B>Additional Query Parameter:</B></TD>
+					<TD colspan="2"><INPUT id="QueryParam2" type="text" name="QueryParam2"></TD>
+				</TR>
+				</TR>
+
+			</TABLE>
+		</DIV>
+
+		<DIV id="QueryExTable">
+			<TABLE cellSpacing="0" cellPadding="1" border="0">
+				<TR>
+					<TD><B>Primary Sort:</B></TD>
+					<!-- Options for select added dynamically at time of QueryType selection-->
+					<TD colspan="2"><SELECT id="PrimarySort" name="PrimarySort"></SELECT></TD>
+					<TD>
+						<TABLE cellSpacing="0" cellPadding="1" border="0">
+							<TD><B>Sort Order:</B></TD>
+							<TD>Up</TD>
+							<TD><INPUT id="primaryUp"   type="radio"  value="primaryUp"  name="PrimarySortGroup" CHECKED ></TD>
+							<TD>Down</TD>
+							<TD><INPUT id="primaryDown" type="radio" value="primaryDown" name="PrimarySortGroup"></TD>
+						</TABLE>
+					</TD>
+				</TR>				
+				<TR><TD><B>Secondary Sort:</B></TD>
+					<!-- Options for select added dynamically at time of QueryType selection-->
+					<TD colspan="2"><SELECT id="SecondarySort" name="SecondarySort"></SELECT></TD>
+					<TD>
+						<TABLE cellSpacing="0" cellPadding="1" border="0">
+							<TD><B>Sort Order:</B></TD>
+							<TD>Up</TD>
+							<TD><INPUT id="secondaryUp"   type="radio" value="secondaryUp"   name="SecondarySortGroup" CHECKED ></TD>
+							<TD>Down</TD>
+							<TD><INPUT id="secondaryDown" type="radio" value="secondaryDown" name="SecondarySortGroup"></TD>
+						</TABLE>
+					</TD>				
+				</TR>
+			</TABLE>
+		</DIV>		
+		
+		<DIV id="QueryButtonTable">
+			<TABLE>
+				<TR>
+					<TD colspan="3"><BR></TD>
+				</TR>
+				<TR>
+					<TD colspan="2"><INPUT class="ButtonStyle" id="CreateQueryButton" type="button" value="Create Initial Query" name="CreateQueryButton" onclick="CreateInitialQuery();">
+					<INPUT class="ButtonStyle" id="PreviewQueryButton" type="button" value="Preview Query" name="PreviewQueryButton" onclick="PreviewQuery();"></TD>
+					<TD colspan="1"><INPUT class="ButtonStyle" id="AddQueryConditionButton" type="button" value="Add Query Condition" name="AddQueryConditionButton" onclick="AddQueryCondition();">
+									<INPUT class="ButtonStyle" id="ResetQuery" type="button" value="Reset Query" name="ResetQuery" onclick="ResetQuery();">
+									<INPUT class="ButtonStyle" id="InvokeButton" type="button" value="Invoke" name="InvokeButton" onclick="PerformQuery();">
+					</TD>
+				</TR>
+				<TR>
+					<TD colspan="3"><BR></TD>
+				</TR>
+				<TR>
+					<TD colspan="3"></TD>
+				</TR>
+			</TABLE>
+		</DIV>				
+
+
+	
+		<!-- Table with one parameter for input -->
+		<DIV id="OneParameterTable">
+			<TABLE cellSpacing="0" cellPadding="1" border="0">
+				<TR>
+					<TD><DIV id="T1Param1Title"></DIV></TD>
+				</TR>
+				<TR>
+					<TD><INPUT id="T1Input1" type="text" name="T1Input1"></TD>
+					<TD><INPUT class="ButtonStyle" id="T1InvokeButton" type="button" value="Invoke" name="T1InvokeButton" onclick="Invoke(1);"></TD>
+				</TR>
+				<TR>
+					<TD colspan="3"></TD>
+				</TR>
+			</TABLE>
+		</DIV>
+		
+		<!-- Table with 2 parameters for input -->
+		<DIV id="TwoParameterTable">
+			<TABLE cellSpacing="0" cellPadding="1" border="0">
+				<TR>
+					<TD><DIV id="T2Param1Title"></DIV></TD>
+					<TD><DIV id="T2Param2Title"></DIV></TD>
+				</TR>
+				<TR>
+					<TD><INPUT id="T2Input1" type="text" name="T2Input1"></TD>
+					<TD><INPUT id="T2Input2" type="text" name="T2Input2"></TD>
+					<TD><INPUT class="ButtonStyle" id="T2InvokeButton" type="button" value="Invoke" name="T2InvokeButton" onclick="Invoke(2);"></TD>
+				</TR>
+				<TR>
+					<TD colspan="3"></TD>
+				</TR>
+			</TABLE>
+		</DIV>
+		
+		<!-- Table with 3 parameters for input -->
+		<DIV id="ThreeParameterTable">
+			<TABLE cellSpacing="0" cellPadding="1" border="0">
+				<TR>
+					<TD><DIV id="T3Param1Title"></DIV></TD>
+					<TD><DIV id="T3Param2Title"></DIV></TD>
+					<TD><DIV id="T3Param3Title"></DIV></TD>
+				</TR>
+				<TR>
+					<TD><INPUT id="T3Input1" type="text" name="T3Input1"></TD>
+					<TD><INPUT id="T3Input2" type="text" name="T3Input2"></TD>
+					<TD><INPUT id="T3Input3" type="text" name="T3Input3"></TD>
+					<TD><INPUT class="ButtonStyle" id="T3InvokeButton" type="button" value="Invoke" name="T3InvokeButton" onclick="Invoke(3);"></TD>
+				</TR>
+				<TR>
+					<TD colspan="3"></TD>
+				</TR>
+			</TABLE>
+		</DIV>
+		
+		<!-- Table with 4 parameters for input -->
+		<DIV id="FourParameterTable">
+			<TABLE cellSpacing="0" cellPadding="1" border="0">
+				<TR>
+					<TD><DIV id="T4Param1Title"></DIV></TD>
+					<TD><DIV id="T4Param2Title"></DIV></TD>
+					<TD><DIV id="T4Param3Title"></DIV></TD>
+					<TD><DIV id="T4Param4Title"></DIV></TD>
+				</TR>
+				<TR>
+					<TD><INPUT id="T4Input1" type="text" name="T4Input1"></TD>
+					<TD><INPUT id="T4Input2" type="text" name="T4Input2"></TD>
+					<TD><INPUT id="T4Input3" type="text" name="T4Input3"></TD>
+					<TD><INPUT id="T4Input4" type="text" name="T4Input4"></TD>
+					<TD><INPUT class="ButtonStyle" id="T4InvokeButton" type="button" value="Invoke" name="T4InvokeButton" onclick="Invoke(4);"></TD>
+				</TR>
+				<TR>
+					<TD colspan="3"></TD>
+				</TR>
+			</TABLE>
+		</DIV>
+		
+		<!-- Table with 5 parameters for input -->
+		<DIV id="FiveParameterTable">
+			<TABLE cellSpacing="0" cellPadding="1" border="0">
+				<TR>
+					<TD><DIV id="T5Param1Title"></DIV></TD>
+					<TD><DIV id="T5Param2Title"></DIV></TD>
+					<TD><DIV id="T5Param3Title"></DIV></TD>
+					<TD><DIV id="T5Param4Title"></DIV></TD>
+					<TD><DIV id="T5Param5Title"></DIV></TD>
+				</TR>
+				<TR>
+					<TD><INPUT id="T5Input1" type="text" name="T5Input1"></TD>
+					<TD><INPUT id="T5Input2" type="text" name="T5Input2"></TD>
+					<TD><INPUT id="T5Input3" type="text" name="T5Input3"></TD>
+					<TD><INPUT id="T5Input4" type="text" name="T5Input4"></TD>
+					<TD><INPUT id="T5Input5" type="text" name="T5Input5"></TD>
+					<TD><INPUT class="ButtonStyle" id="T5InvokeButton" type="button" value="Invoke" name="T5InvokeButton" onclick="Invoke(5);"></TD>
+				</TR>
+				<TR>
+					<TD colspan="3"></TD>
+				</TR>
+			</TABLE>
+		</DIV>
+		
+		<!-- Table with 6 parameters for input -->
+		<DIV id="SixParameterTable">
+			<TABLE cellSpacing="0" cellPadding="1" border="0">
+				<TR>
+					<TD><DIV id="T6Param1Title"></DIV></TD>
+					<TD><DIV id="T6Param2Title"></DIV></TD>
+					<TD><DIV id="T6Param3Title"></DIV></TD>
+					<TD><DIV id="T6Param4Title"></DIV></TD>
+					<TD><DIV id="T6Param5Title"></DIV></TD>
+					<TD><DIV id="T6Param6Title"></DIV></TD>
+				</TR>
+				<TR>
+					<TD><INPUT id="T6Input1" type="text" name="T6Input1"></TD>
+					<TD><INPUT id="T6Input2" type="text" name="T6Input2"></TD>
+					<TD><INPUT id="T6Input3" type="text" name="T6Input3"></TD>
+					<TD><INPUT id="T6Input4" type="text" name="T6Input4"></TD>
+					<TD><INPUT id="T6Input5" type="text" name="T6Input5"></TD>
+					<TD><INPUT id="T6Input6" type="text" name="T6Input6"></TD>
+					<TD><INPUT class="ButtonStyle" id="T6InvokeButton" type="button" value="Invoke" name="T6InvokeButton" onclick="Invoke(6);"></TD>
+				</TR>
+				<TR>
+					<TD colspan="3"></TD>
+				</TR>
+			</TABLE>
+		</DIV>
+
+		<!-- Table with 7 parameters for input -->
+		<DIV id="SevenParameterTable">
+			<TABLE cellSpacing="0" cellPadding="1" border="0">
+				<TR>
+					<TD><DIV id="T7Param1Title"></DIV></TD>
+					<TD><DIV id="T7Param2Title"></DIV></TD>
+					<TD><DIV id="T7Param3Title"></DIV></TD>
+					<TD><DIV id="T7Param4Title"></DIV></TD>
+					<TD><DIV id="T7Param5Title"></DIV></TD>
+					<TD><DIV id="T7Param6Title"></DIV></TD>
+					<TD><DIV id="T7Param7Title"></DIV></TD>					
+				</TR>
+				<TR>
+					<TD><INPUT id="T7Input1" type="text" name="T7Input1"></TD>
+					<TD><INPUT id="T7Input2" type="text" name="T7Input2"></TD>
+					<TD><INPUT id="T7Input3" type="text" name="T7Input3"></TD>
+					<TD><INPUT id="T7Input4" type="text" name="T7Input4"></TD>
+					<TD><INPUT id="T7Input5" type="text" name="T7Input5"></TD>
+					<TD><INPUT id="T7Input6" type="text" name="T7Input6"></TD>
+					<TD><INPUT id="T7Input7" type="text" name="T7Input7"></TD>
+					<TD><INPUT class="ButtonStyle" id="T7InvokeButton" type="button" value="Invoke" name="T7InvokeButton" onclick="Invoke(7);"></TD>
+				</TR>
+				<TR>
+					<TD colspan="3"></TD>
+				</TR>
+			</TABLE>
+		</DIV>
+
+		<!-- Table with 8 parameters for input -->
+		<DIV id="EightParameterTable">
+			<TABLE cellSpacing="0" cellPadding="1" border="0">
+				<TR>
+					<TD><DIV id="T8Param1Title"></DIV></TD>
+					<TD><DIV id="T8Param2Title"></DIV></TD>
+					<TD><DIV id="T8Param3Title"></DIV></TD>
+					<TD><DIV id="T8Param4Title"></DIV></TD>
+					<TD><DIV id="T8Param5Title"></DIV></TD>
+					<TD><DIV id="T8Param6Title"></DIV></TD>
+					<TD><DIV id="T8Param7Title"></DIV></TD>
+					<TD><DIV id="T8Param8Title"></DIV></TD>
+				</TR>
+				<TR>
+					<TD><INPUT id="T8Input1" type="text" name="T8Input1"></TD>
+					<TD><INPUT id="T8Input2" type="text" name="T8Input2"></TD>
+					<TD><INPUT id="T8Input3" type="text" name="T8Input3"></TD>
+					<TD><INPUT id="T8Input4" type="text" name="T8Input4"></TD>
+					<TD><INPUT id="T8Input5" type="text" name="T8Input5"></TD>
+					<TD><INPUT id="T8Input6" type="text" name="T8Input6"></TD>
+					<TD><INPUT id="T8Input7" type="text" name="T8Input7"></TD>
+					<TD><INPUT id="T8Input8" type="text" name="T8Input8"></TD>					
+					<TD><INPUT class="ButtonStyle" id="T8InvokeButton" type="button" value="Invoke" name="T8InvokeButton" onclick="Invoke(8);"></TD>
+				</TR>
+				<TR>
+					<TD colspan="3"></TD>
+				</TR>
+			</TABLE>
+		</DIV>
+
+		<!-- Table only has the Invoke button -->
+		<DIV id="InvokeButtonTable">
+			<TABLE cellSpacing="0" cellPadding="1" border="0">
+				<TR>
+					<TD><INPUT class="ButtonStyle" id="InvokeButtonOnly" type="button" value="Invoke" name="InvokeButtonOnly" onclick="Invoke(0);"></TD>
+				</TR>
+				<TR>
+					<TD colspan="3"></TD>
+				</TR>
+			</TABLE>
+		</DIV>
+
+		<DIV id="OutputWindowDiv">&nbsp;</DIV>
+		<DIV id="EventOutputDiv">&nbsp;</DIV>
+	</BODY>
+</HTML>

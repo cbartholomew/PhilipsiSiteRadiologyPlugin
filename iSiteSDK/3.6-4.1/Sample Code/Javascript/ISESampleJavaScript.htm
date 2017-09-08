@@ -1,0 +1,168 @@
+<!-- saved from url=(0014)about:internet -->
+<html>	
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<SCRIPT src="iSiteConfig.js" ></SCRIPT>
+
+<title>iSite Enterprise Sample Using Javascript</title>
+
+<!--
+
+iSite Enterprise Sample
+
+This example shows the basic usage of the iSite Non-Visual and Enterprise controls.
+
+//-->
+
+<SCRIPT Language="JavaScript">
+<!--
+var bInitialized = 0;
+
+function Init()
+{
+   //Note: Change iSiteConfig.js file for your iSite settins.
+   svrip.value = isiteInfo.Server.iSyntaxServerIP;
+   svrport.value = isiteInfo.Server.Port;
+   svrurl.value = isiteInfo.Server.ImageSuiteURL;
+   svrdsn.value = isiteInfo.Server. ImageSuiteDSN;
+  
+   uname.value = isiteInfo.User.UserName;
+   pword.value = isiteInfo.User.Password;
+   authsource.value = isiteInfo.User.AuthSource;
+}
+
+function InitializeNonVisualCtrl()
+{
+	// only initialize once
+	if (!bInitialized)
+	{
+		iSiteNonVisualCtrl.iSyntaxServerIP = svrip.value;
+		iSiteNonVisualCtrl.iSyntaxServerPort = svrport.value;
+		iSiteNonVisualCtrl.ImageSuiteURL = svrurl.value;
+		iSiteNonVisualCtrl.ImageSuiteDSN = svrdsn.value;
+
+		// Always initialize the non-visual control first
+		if (iSiteNonVisualCtrl.Initialize())
+		{
+			bInitialized = 1;
+		}
+		else
+		{
+			alert("Error Initializing Non-Visual Control")
+		}
+	}
+}
+
+// log in and show the isite enterprise control in a dialog
+// the dialog will open the exam, see ISEDlgJavaScript.htm
+function OnShow(user, password, authsource)
+{
+	InitializeNonVisualCtrl();
+	
+	// log in if we have not logged in yet, security code will be empty if not logged in.
+	if (iSiteNonVisualCtrl.GetCurrentUser() != "" || iSiteNonVisualCtrl.Login(user,password, authsource, "", ""))
+	{
+		// show dialog with iSiteEnterprise control, pass this window as the defaultargument
+		showModalDialog('ISEDlgJavascript.htm',window,'status:no;resizable:yes;dialogWidth:1024px;dialogHeight:720px');
+	}
+	else
+	{
+		alert("Error Logging in")
+	}
+}
+//-->
+</SCRIPT>
+
+</head>
+
+<body onload ="Init()">
+
+<p>
+ <OBJECT id=iSiteNonVisualCtrl
+		  CLASSID = "clsid:DD0E6EAF-2822-4d42-A2CF-7FED75DA06CA"
+		  width=0%
+		  height=0%>
+	</OBJECT>  	 	
+</p>
+      
+
+<table BORDER="0" CELLPADDING="4" CELLSPACING="0" WIDTH=100% HEIGHT=100% align="center">
+<TR>
+	<table BORDER="0" CELLPADDING="4" CELLSPACING="0" WIDTH="500" align="center">
+	<TR align="center">
+		<TD><IMAGE src="saapi.bmp"></TD>
+	</TR>
+	<TR align="center" BGCOLOR="#D4D4D4">
+		<TD HEIGHT="30"><FONT COLOR="black" SIZE="5">iSite Enterprise Sample Using JavaScript</FONT></TD>
+	</TR>
+	</TABLE>
+	<TABLE BORDER="0" WIDTH="500" BGCOLOR="#bbc5ca" CELLPADDING="4" CELLSPACING="0" align="center">
+		<TR>
+			<TD HEIGHT="167">
+				<TABLE BORDER="0" WIDTH="400" CELLPADDING="0" CELLSPACING="0" align="center">
+					<TR>
+						<TD COLSPAN="2" VALIGN="bottom" height=30><B>Initialization Properties</B></TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Server IP:</TD>
+						<TD ALIGN="left" width="288">&nbsp;<INPUT id="svrip" NAME="serverip" TYPE="TEXT" VALUE="192.192.192.192" SIZE="20"> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Imaging Suite URL:</TD>
+							<TD ALIGN="left">&nbsp;
+								<INPUT id="svrurl" NAME="url" TYPE="TEXT" VALUE="http://192.192.192.192/iSuite" SIZE="40"> 
+								
+							</TD>
+					</TR>
+					<TR>
+					<TR>
+						<TD ALIGN="left" width="110">Imaging Suite DSN:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT id="svrdsn" NAME="dsn" TYPE="TEXT" VALUE="iSite" SIZE="40"> </TD>
+					</TR>
+						<TD ALIGN="left" width="110">Server Port:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT id="svrport" NAME="serverport" TYPE="TEXT" VALUE="6464" SIZE="20"> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">User Name:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT NAME="uname" TYPE="TEXT" SIZE="20"> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Password:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT NAME="pword" TYPE="PASSWORD" SIZE="20"> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">AuthSource:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT NAME="authsource" TYPE="TEXT" VALUE="iSite" SIZE="20"> </TD>
+					</TR>
+				</TABLE>
+				<TABLE BORDER="0" WIDTH="400" CELLPADDING="0" CELLSPACING="0" align="center">
+					<TR>
+						<TD COLSPAN="2" VALIGN="bottom" height=30 width="398"><B>iSite Enterprise</B></TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Patient ID:</TD>
+						<TD ALIGN="left" width="288">&nbsp;<INPUT id="pid" NAME="patientid" TYPE="TEXT" SIZE="20" value=""> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Accession ID:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT id="acc" NAME="accession" TYPE="TEXT" SIZE="20" value=""> </TD>
+					</TR>
+					<TR>
+						<TD ALIGN="left" width="110">Organization:</TD>
+						<TD ALIGN="left">&nbsp;<INPUT id="org" NAME="organization" TYPE="TEXT" SIZE="20" value="DEFAULT"> </TD>
+					</TR>
+					<TR>
+						<TD COLSPAN="2" align="center" HEIGHT="45" width="398"><INPUT TYPE="button" VALUE=" ShowExam " NAME="showbtn" onclick="OnShow(uname.value, pword.value, authsource.value)"></TD>
+					</TR>
+				</TABLE>
+
+			</TD>
+		</TR>
+	</TABLE>
+</TR>
+</TABLE>
+
+</body>
+
+</html>

@@ -1,0 +1,613 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>\\shcintegweb\wwwroot\isite\</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="assets/shc.bmp">
+      <publishTime>05/21/2014 13:19:24</publishTime>
+    </File>
+    <File Include="assets/shc0.bmp">
+      <publishTime>05/21/2014 17:27:43</publishTime>
+    </File>
+    <File Include="bin/iSiteRadiologyPlugin.dll">
+      <publishTime>06/30/2014 15:52:55</publishTime>
+    </File>
+    <File Include="bin/iSiteRadiologyPlugin.pdb">
+      <publishTime>06/30/2014 15:52:54</publishTime>
+    </File>
+    <File Include="Example/StudyUIDLookupExample.html">
+      <publishTime>05/08/2014 18:51:21</publishTime>
+    </File>
+    <File Include="Example/VoxarExample.html">
+      <publishTime>05/08/2014 18:50:24</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Documents/iSite4.1_3 6_EnterpriseActiveXRef.pdf">
+      <publishTime>05/21/2014 10:44:21</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Documents/iSite4.1_3 6_RadiologyActiveXRef.pdf">
+      <publishTime>05/21/2014 10:44:21</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Documents/iSite4.1_3.6Client and API Overview.pdf">
+      <publishTime>05/21/2014 10:44:21</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Documents/iSite4.1_3.6_APIVersionInfo.pdf">
+      <publishTime>05/21/2014 10:44:21</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Documents/iSite4.1_3.6_EnterpriseTutorials.pdf">
+      <publishTime>05/21/2014 10:44:21</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Documents/iSite4.1_3.6_PluginTutorial.pdf">
+      <publishTime>05/21/2014 10:44:21</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/Javascript/CustomLoginJavaScript.htm">
+      <publishTime>05/21/2014 10:44:21</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/Javascript/ISEDlgJavaScript.htm">
+      <publishTime>05/21/2014 10:44:21</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/Javascript/ISEMenuSampleJavaScript.html">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/Javascript/ISEQueryJavaScript.htm">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/Javascript/ISESampleJavaScript.htm">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/Javascript/iSiteConfig.js">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/Javascript/iSiteControl.js">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/Javascript/saapi.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ezDicomMax/DicomViewer_ISE.htm">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ezDicomMax/DicomViewer_ISR.htm">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ezDicomMax/ezDICOMax.inf">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ezDicomMax/ezDICOMax.ocx">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ezDicomMax/license.txt">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE PlugIn Sample/DicomFile_ISE.htm">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE PlugIn Sample/ISESamplePrefsMachine.htm">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE PlugIn Sample/ISESamplePrefsMachine.js">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE PlugIn Sample/ISESamplePrefsSystem.htm">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE PlugIn Sample/ISESamplePrefsSystem.js">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE PlugIn Sample/ISESamplePrefsUser.htm">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE PlugIn Sample/ISESamplePrefsUser.js">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE PlugIn Sample/logoPlatform.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE PlugIn Sample/logoSample.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE PlugIn Sample/LogWriter.dll">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE PlugIn Sample/LogWriter.js">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE PlugIn Sample/WinHelper.dll">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/images/AboutBox.gif">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/images/arrowdown.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/images/Cover 2.gif">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/images/DownArrow.gif">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/images/EchoSmush.gif">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/images/iSitetutorialicon.gif">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/images/ModalityWorklist_19.gif">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/images/mystentor_image_monitor.gif">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/images/saapi.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/images/setup.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/images/sSampButton.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/images/sSampIcon.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/images/StentOE2.jpg">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/images/UpdateDialog.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/iSite_Plug_In.htm">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/iSite_Plug_In.js">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISE Test Plug In/iSite_Plug_In_Arrays.js">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR PlugIn Sample/DicomFile_ISR.htm">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR PlugIn Sample/ISRSamplePrefsMachine.htm">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR PlugIn Sample/ISRSamplePrefsMachine.js">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR PlugIn Sample/ISRSamplePrefsSystem.htm">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR PlugIn Sample/ISRSamplePrefsSystem.js">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR PlugIn Sample/ISRSamplePrefsUser.htm">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR PlugIn Sample/ISRSamplePrefsUser.js">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR PlugIn Sample/logoPlatform.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR PlugIn Sample/logoSample.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR PlugIn Sample/LogWriter.dll">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR PlugIn Sample/LogWriter.js">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR PlugIn Sample/WinHelper.dll">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/images/AboutBox.gif">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/images/arrowdown.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/images/Cover 2.gif">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/images/DownArrow.gif">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/images/EchoSmush.gif">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/images/iSitetutorialicon.gif">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/images/ModalityWorklist_19.gif">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/images/mystentor_image_monitor.gif">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/images/saapi.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/images/setup.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/images/sSampButton.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/images/sSampIcon.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/images/StentOE2.jpg">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/images/UpdateDialog.bmp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/Radiology_Plug_In.htm">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/Radiology_Plug_In.js">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/ISR Test Plug In/Radiology_Plug_In_Arrays.js">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/dlldata.c">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/JavaScript/LogWriter.js">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/LogWriter.aps">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/LogWriter.clw">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/LogWriter.cpp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/LogWriter.def">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/LogWriter.dsp">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/LogWriter.dsw">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/LogWriter.h">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/LogWriter.idl">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/LogWriter.opt">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/LogWriter.plg">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/LogWriter.rc">
+      <publishTime>05/21/2014 10:44:22</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/LogWriterps.def">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/LogWriterps.mk">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/LogWriter_i.c">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/LogWriter_p.c">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/ReleaseMinDependency/LogWriter.dll">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/ReleaseMinDependency/LogWriter.exp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/ReleaseMinDependency/LogWriter.lib">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/ReleaseMinDependency/regsvr32.trg">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/resource.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/StdAfx.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/StdAfx.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/Writer.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/Writer.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/LogWriter/Writer.rgs">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/dlldata.c">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/Helper.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/Helper.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/Helper.rgs">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/ProgressDlg.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/ProgressDlg.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/resource.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/StdAfx.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/StdAfx.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/WinHelper.aps">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/WinHelper.clw">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/WinHelper.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/WinHelper.def">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/WinHelper.dsp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/WinHelper.dsw">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/WinHelper.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/WinHelper.idl">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/WinHelper.opt">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/WinHelper.plg">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/WinHelper.rc">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/WinHelperps.def">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/WinHelperps.mk">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/WinHelper_i.c">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/PlugInSamples/WinHelper/WinHelper_p.c">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VBScript/AutoLogin.htm">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VBScript/ISEDlgVBScript.htm">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VBScript/ISESampleVBScript.htm">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VBScript/iSiteControl.js">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VBScript/saapi.bmp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISEImageSample_VisualBasic/ISiteImageFrm.frm">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISEImageSample_VisualBasic/ISiteImageOpenDlg.frm">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISEImageSample_VisualBasic/iSiteImagePropDlg.frm">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISEImageSample_VisualBasic/ISiteLoginFrm.frm">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISEImageSample_VisualBasic/ISiteSampleProject.vbp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISEImageSample_VisualBasic/ISiteSampleProject.vbw">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISEMenuSample_VisualBasic/ISiteDisplay.frm">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISEMenuSample_VisualBasic/ISiteSample.frm">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISEMenuSample_VisualBasic/ISiteSampleProject.vbp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISEMenuSample_VisualBasic/ISiteSampleProject.vbw">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISEQuerySample_VisualBasic/ISiteDisplay.frm">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISEQuerySample_VisualBasic/ISiteSample.frm">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISEQuerySample_VisualBasic/ISiteSample.frx">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISEQuerySample_VisualBasic/ISiteSampleProject.vbp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISEQuerySample_VisualBasic/ISiteSampleProject.vbw">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISESample_VisualBasic/iSiteDisplay.frm">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISESample_VisualBasic/iSiteSample.frm">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISESample_VisualBasic/ISiteSampleProject.vbp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualBasic/ISESample_VisualBasic/ISiteSampleProject.vbw">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/DICOMLookupDlg.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/DICOMLookupDlg.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ISEDisplayDlg.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ISEDisplayDlg.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ISEImageDlg.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ISEImageDlg.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ISESample.aps">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ISESample.clw">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ISESample.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ISESample.dsp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ISESample.dsw">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ISESample.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ISESample.opt">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ISESample.plg">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ISESample.rc">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ISESampleDlg.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ISESampleDlg.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/isiteenterprise.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/isiteenterprise.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/isiteenterprise1.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/isiteenterprise1.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/isiteimage.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/isiteimage.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/isiteimage1.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/isiteimage1.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/isitenonvisual.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/isitenonvisual.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/isitenonvisual1.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/isitenonvisual1.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/ReadMe.txt">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/res/ISESample.ico">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/res/ISESample.rc2">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/resource.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/SetViewDlg.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/SetViewDlg.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/StdAfx.cpp">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="iSiteSDK/3.6-4.1/Sample Code/VisualC++/StdAfx.h">
+      <publishTime>05/21/2014 10:44:23</publishTime>
+    </File>
+    <File Include="js/apihelper.js">
+      <publishTime>05/21/2014 20:07:55</publishTime>
+    </File>
+    <File Include="js/constants.js">
+      <publishTime>06/30/2014 15:50:58</publishTime>
+    </File>
+    <File Include="shc.bmp">
+      <publishTime>05/21/2014 13:19:24</publishTime>
+    </File>
+    <File Include="ShieldsAPI.html">
+      <publishTime>05/23/2014 10:12:40</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>06/30/2014 15:52:55</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

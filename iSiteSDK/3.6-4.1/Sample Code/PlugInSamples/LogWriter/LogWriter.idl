@@ -1,0 +1,47 @@
+// LogWriter.idl : IDL source for LogWriter.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (LogWriter.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+	[
+		object,
+		uuid(2E1CE394-569F-4DD9-8064-8339E16EB660),
+		dual,
+		helpstring("IWriter Interface"),
+		pointer_default(unique)
+	]
+	interface IWriter : IDispatch
+	{
+		//[propget, id(1), helpstring("property DebugLevel")] HRESULT DebugLevel([out, retval] short *pVal);
+		//[propput, id(1), helpstring("property DebugLevel")] HRESULT DebugLevel([in] short newVal);
+		[id(2), helpstring("method Initialize")] HRESULT Initialize([in] BSTR FileLocation, [out, retval] VARIANT_BOOL *pSuccess);
+		[id(3), helpstring("method WriteToLog")] HRESULT WriteToLog([in] BSTR WriteLine, [out, retval] VARIANT_BOOL *pSuccess);
+		[propget, id(4), helpstring("property LogPrefix")] HRESULT LogPrefix([out, retval] BSTR *pVal);
+		[propput, id(4), helpstring("property LogPrefix")] HRESULT LogPrefix([in] BSTR newVal);
+		[propget, id(5), helpstring("property Options")] HRESULT Options([out, retval] BSTR *pVal);
+		[propput, id(5), helpstring("property Options")] HRESULT Options([in] BSTR newVal);
+		[propget, id(6), helpstring("property Initialized")] HRESULT Initialized([out, retval] VARIANT_BOOL *pVal);
+	};
+
+[
+	uuid(EFE28B5C-D02A-47A1-8E67-88C51D818C82),
+	version(1.0),
+	helpstring("LogWriter 1.0 Type Library")
+]
+library LOGWRITERLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		uuid(8848DC58-BEDD-4D31-82A6-0D3765881F5C),
+		helpstring("Writer Class")
+	]
+	coclass Writer
+	{
+		[default] interface IWriter;
+	};
+};

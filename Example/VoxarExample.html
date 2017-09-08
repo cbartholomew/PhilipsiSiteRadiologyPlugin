@@ -1,0 +1,289 @@
+﻿<!-- saved from url=(0014)about:internet -->
+<html>
+
+<head>
+
+    <title>Voxar 3D Plug-in for iSite Radiology</title>
+
+    <script language="javascript">
+
+        var PREFS_FILE_MACHINE = "Voxar_3D_ISR_Preferences.htm";
+        var PREFS_NAME         = "Voxar 3D Preferences";
+        var PREFS_TYPE         = "Machine";
+
+        // Holds the IDs of the canvas and shelf from which images are loaded
+        var g_canvasId = 0;
+        var g_shelfId  = 0;
+
+        function fnAddMenuItems()
+        {
+            Radiology.AddViewMenuItem( "Voxar 3D" );
+        }
+
+        function fnRemoveMenuItems()
+        {
+            Radiology.RemoveViewMenuItem( "Voxar 3D" );
+        }
+
+        function fnPageLoad()
+        {
+            VxrIsiteCtrl.SetIsitePointer(Radiology);
+
+            // Add items to iSite menu
+            fnAddMenuItems();
+
+            // Add preference page
+            AddPrefPage();
+        }
+
+        function fnPageUnload()
+        {
+            VxrIsiteCtrl.Terminate();
+        }
+
+        function AddPrefPage()
+        {
+            // use the prefs file located in this same location
+            var thispath = document.location.toString();
+            thispath = thispath.toLowerCase();
+            var locate = thispath.indexOf("voxar_3d_isr.htm");
+            if (locate > -1)
+            {
+                var path = thispath.substring(0, locate);
+                var prefpath = path + PREFS_FILE_MACHINE;
+                Radiology.AddPreferencePage(PREFS_NAME, prefpath, PREFS_TYPE);
+            }
+        }
+
+        function fnGetImageUIDs( WndId )
+        {
+            // Create collection of image UIDs
+            var uids = new ActiveXObject( "VxrIsitePlugin.VxrIsiteBstrCollection" );
+
+            // Populate collection
+            var wndInfo = Radiology.GetStaticWindowInfo( WndId );
+            if ( wndInfo != "" )
+            {
+                var doc = xmldso.XMLDocument;
+                doc.loadXML( wndInfo );
+
+                var nodeList  = doc.getElementsByTagName( "Window" );
+                var imageList = nodeList.item(0).getElementsByTagName( "ImageUIDs" );
+                var idList    = imageList.item(0).getElementsByTagName( "UID" );
+
+                for ( var i = 0; i < idList.length; i ++ )
+                {
+                    uids.add( idList.item(i).text );
+                }
+            }
+
+            return uids;
+        }
+
+
+        function Radiology_EventViewMenuSelected( MenuItem, ContextRecord )
+        {
+            if ( ContextRecord != "" )
+            {
+                if ( MenuItem == "Voxar 3D" )
+                {
+                    var doc = xmldso.XMLDocument;
+                    doc.loadXML( ContextRecord );
+                    var nodeList = doc.getElementsByTagName( "WindowInfo" );
+                    var wndID    = nodeList.item(0).selectSingleNode( "WindowID" ).text;
+
+                    // Get the current image in case it is live
+                    var currentUID = nodeList.item(0).selectSingleNode("x00080018").text;
+
+                    // check modality - throw error if PET
+                    var winInfo = Radiology.GetStaticWindowInfo ( wndID );
+                    var winDoc = xmldso.XMLDocument;
+                    winDoc.loadXML( winInfo );
+                    var winInfoList = winDoc.getElementsByTagName( "Window");
+                    var modality = winInfoList.item(0).getElementsByTagName( "Modality" );
+                    var modalityValue = modality.item(0).text;
+
+                    var imageUidTag = winInfoList.item(0).getElementsByTagName( "ImageUIDs" );
+                    var uidList = imageUidTag.item(0).getElementsByTagName( "UID" );
+                    var firstImageUID = uidList.item(0).text;
+
+                    if (modalityValue == "CT" || modalityValue == "MR")
+                    {
+                        VxrIsiteCtrl.InitializeProgressDialog();
+                        VxrIsiteCtrl.ShowProgressDialog();
+
+                        try
+                        {
+                            // Load the images into Voxar 3D
+                            VxrIsiteCtrl.LoadImages( firstImageUID, currentUID );
+
+                            // Turn on image polling for this shelf since we have just loaded
+                            // images from this shelf into Voxar 3D.
+                            Radiology.InternalExecute( "EnableImagePolling", g_shelfId, "1", "5" );
+                        } catch (ex)
+                        {
+                        }
+
+                        VxrIsiteCtrl.HideProgressDialog();
+                    }
+                    else
+                    {
+                        Radiology.MessageBox("Only MR and CT modalities supported", 0)
+                    }
+                }
+            }
+        }
+
+        function fnGetDicomTag( WndId, DicomTag )
+        {
+            return Radiology.GetDICOMValue( WndId, DicomTag );
+        }
+
+        function Radiology_EventShelfLoaded( CanvasPageID, ShelfID )
+        {
+            // Make a note of the canvas and shelf IDs
+            g_shelfId = ShelfID;
+            g_canvasId = CanvasPageID;
+
+            createShelf( ShelfID );
+            VxrIsiteCtrl.SpeculativeLoad();
+        }
+
+        function createShelf( ShelfID )
+        {
+            var shelfWindows = Radiology.GetShelfWindowIDs( ShelfID );
+            if ( shelfWindows != "" )
+            {
+                var doc = xmldso.XMLDocument;
+                doc.loadXML( shelfWindows );
+                var windowList = doc.getElementsByTagName( "WindowIDs" );
+                var idList = windowList.item(0).getElementsByTagName( "ID" );
+
+                AddWindowsToShelf( ShelfID, idList );
+            }
+        }
+
+        function Radiology_EventShelfClosed( CanvasPageID, ShelfID )
+        {
+            if ( g_canvasId == CanvasPageID && g_shelfId == ShelfID )
+            {
+                // We have closed the source data, so invalidate our stored WndId
+                VxrIsiteCtrl.ClearShelf();
+                g_canvasId = 0;
+                g_shelfId  = 0;
+            }
+        }
+
+        function AddWindowsToShelf( ShelfID, idList )
+        {
+            for ( var i = 0; i < idList.length; i ++ )
+            {
+                var winInfo = Radiology.GetStaticWindowInfo ( idList.item(i).text );
+                var winDoc = xmldso.XMLDocument;
+                winDoc.loadXML( winInfo );
+
+                var winInfoList = winDoc.getElementsByTagName( "Window");
+                var modality = winInfoList.item(0).getElementsByTagName( "Modality" );
+
+                var uids = winInfoList.item(0).getElementsByTagName( "ImageUIDs" );
+                var uidList = uids.item(0).getElementsByTagName( "UID" );
+
+                var firstImageUID = uidList.item(0).text;
+
+                var seriesLength = uidList.length;
+                var modalityValue = modality.item(0).text;
+
+                var seriesWindow = idList.item(i).text;
+
+                // CT/MR
+                if (modalityValue == "CT" || modalityValue == "MR")
+                {
+                    // Passed simple tests - now get required tags
+                    var thickness = fnGetDicomTag( seriesWindow, "0x00180050" );
+                    var contrastBolus = fnGetDicomTag( seriesWindow, "0x00180010");
+                    var contrastBolusPresent = (contrastBolus.length > 0)
+                    var studyDescription = fnGetDicomTag( seriesWindow, "0x00081030" );
+                    var seriesDescription = fnGetDicomTag( seriesWindow, "0x0008103E" );
+                    var voxarCreatedSeries = fnGetDicomTag( seriesWindow, "0x00081090" ) == "Voxar 3D";
+                    var seriesNumber = fnGetDicomTag( seriesWindow, "0x00200011" );
+
+                    var bstr_uids = new ActiveXObject( "VxrIsitePlugin.VxrIsiteBstrCollection" );
+                    for ( var j = 0; j < seriesLength; j++ )
+                    {
+                        bstr_uids.add( uidList.item(j).text );
+                    }
+
+                    VxrIsiteCtrl.AddSeries
+                    (
+                        seriesWindow,
+                        firstImageUID,
+                        bstr_uids,
+                        modalityValue,
+                        seriesLength,
+                        thickness,
+                        contrastBolusPresent,
+                        studyDescription,
+                        seriesDescription,
+                        seriesNumber,
+                        voxarCreatedSeries
+                    );
+                }
+            }
+        }
+
+        function Radiology_EventNewImagesArrived( CanvasPageID, ShelfID, UpdatedWindowIDs, NewWindowIDs )
+        {
+            if ( false && NewWindowIDs != "" )
+            {
+                // This should work but the XML is invalid when multiple windows are added :(
+                var doc = xmldso.XMLDocument;
+                doc.loadXML( NewWindowIDs );
+                var newWindowList = doc.getElementsByTagName( "NewWindows" );
+                var windowList = newWindowList.item(0).getElementsByTagName( "WindowIDs" );
+
+                for ( var i = 0; i < windowList.length; i ++ )
+                {
+                    var idList = windowList.item(i).getElementsByTagName( "WindowID" );
+
+                    AddWindowsToShelf( ShelfID, idList );
+                }
+            }
+            else
+            {
+                // So we have to re-create the whole shelf each time until the XML is fixed
+                createShelf( ShelfID );
+            }
+        }
+
+        function Radiology_EventLogout( AutoLogoutFlag )
+        {
+            // Remove items from iSite menu
+            fnRemoveMenuItems();
+
+            // We are unloading - tell the plugin to cleanup
+            VxrIsiteCtrl.Terminate();
+        }
+
+    </script>
+
+
+    <script language="vbscript">
+        Sub VxrIsiteCtrl_OnError( ErrorText )
+        VxrIsiteCtrl.HideProgressDialog
+        Radiology.MessageBox ErrorText, &H00000010
+        End Sub
+    </script>
+
+</head>
+
+
+<body onload="fnPageLoad()" onunload="fnPageUnload()">
+
+    <h2>Voxar 3D Plug-in for iSite Radiology</h2>
+
+    <object id="VxrIsiteCtrl" classid="clsid:5da094c3-2f8b-49c3-a1fb-7f03fdd89904"></object>
+    <object id="xmldso" classid="clsid:550dda30-0541-11d2-9ca9-0060b0ec3d39"></object>
+
+</body>
+
+</html>

@@ -1,0 +1,209 @@
+﻿<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+    <meta name="GENERATOR" content="Microsoft Visual Studio 6.0">
+    <title>Study UID Look UP - iSiteRadiology</title>
+    <script langauge="javascript">
+
+        var MB_OK = 0x00000000;
+        var MB_OKCANCEL = 0x00000001;
+        var MB_ABORTRETRYIGNORE = 0x00000002;
+        var MB_YESNOCANCEL = 0x00000003;
+        var MB_YESNO = 0x00000004;
+        var MB_RETRYCANCEL = 0x00000005;
+        var MB_ICONHAND = 0x00000010;
+        var MB_ICONQUESTION = 0x00000020;
+        var MB_ICONEXCLAMATION = 0x00000030;
+        var MB_ICONASTERISK = 0x00000040;
+        var MB_ICONWARNING = MB_ICONEXCLAMATION;
+        var MB_ICONERROR = MB_ICONHAND;
+        var MB_ICONINFORMATION = MB_ICONASTERISK;
+        var MB_ICONSTOP = MB_ICONHAND;
+
+        // MessageBox return codes
+        var IDOK = 1;
+        var IDCANCEL = 2;
+        var IDABORT = 3;
+        var IDRETRY = 4;
+        var IDIGNORE = 5;
+        var IDYES = 6;
+        var IDNO = 7;
+        var IDCLOSE = 8;
+
+        function OnLoad() {
+        }
+
+        function OnUnload() {
+        }
+
+        function OnOpen() {
+            if (studyuid.value == "") {
+                Radiology.MessageBox("Please enter a valid Study UID.", MB_OK);
+                studyuid.focus();
+                return;
+            }
+
+            //Try to find the study
+            var studyresults = Radiology.FindStudy(studyuid.value);
+
+            //Did we find a study?
+            if (studyresults == "" || studyresults == "0") {
+                //Not a study so try to find the study as an exception.
+                studyresults = Radiology.FindException(studyuid.value);
+
+                //Did we find and exception?
+                if (studyresults != "" || studyresults != "0") {
+                    //Yes open the exception.
+                    Radiology.OpenCanvasPage("", studyresults, 1, 1, 0);
+                    var querystring = "IDXIntExceptionID=";
+                    querystring = querystring + "\"" + studyresults + "\"";
+                    var queryresults = Radiology.Query(querystring, "EXCEPTION", 1);
+                    ShowResults(queryresults);
+                }
+            }
+            else { //yes open the study.4:50 PM 4/13/20054:50 PM 4/13/2005
+                Radiology.OpenCanvasPage(studyresults, "", 1, 1, 0);
+                var querystring = "IDXIntExamID=";
+                querystring = querystring + "\"" + studyresults + "\"";
+                var queryresults = Radiology.Query(querystring, "LOOKUP", 1);
+                ShowResults(queryresults);
+            }
+
+            if (studyresults == "" || studyresults == "0") {
+                Radiology.MessageBox("Unable to open study because the study was not found.", MB_OK);
+                studyuid.focus();
+                return;
+            }
+
+        }
+        function OnQuery() {
+
+            if (studyuid.value == "") {
+                Radiology.MessageBox("Please enter a valid Study UID.", MB_OK);
+                studyuid.focus();
+                return;
+            }
+
+            //Try to find the study
+            var studyresults = Radiology.FindStudy(studyuid.value);
+
+            //Did we find a study?
+            if (studyresults == "" || studyresults == "0") {
+                //Not a study so try to find the study as an exception.
+                studyresults = Radiology.FindException(studyuid.value);
+
+                //Did we find an exception?
+                if (studyresults != "" && studyresults != "0") {
+                    //It's and exception so query for the exception.
+                    var querystring = "IDXIntExceptionID=";
+                    querystring = querystring + "\"" + studyresults + "\"";
+                    var queryresults = Radiology.Query(querystring, "EXCEPTION", 1);
+                    ShowResults(queryresults);
+                }
+            }
+            else {
+                //Yes it's a study so query for the study.
+                var querystring = "IDXIntExamID=";
+                querystring = querystring + "\"" + studyresults + "\"";
+                var queryresults = Radiology.Query(querystring, "LOOKUP", 1);
+                ShowResults(queryresults);
+            }
+
+            if (studyresults == "" || studyresults == "0") {
+                Radiology.MessageBox("Study not found!", MB_ICONWARNING);
+                studyuid.focus();
+                return;
+            }
+        }
+
+        function ShowResults(results) {
+            patientname.value = "";
+            patientid.value = "";
+            accession.value = "";
+            modality.value = "";
+            bodypart.value = "";
+            var total = "0";
+
+            if (results != "") {
+                var doc = xmldso.XMLDocument;
+                doc.loadXML(results);
+
+                var nodeList = doc.getElementsByTagName("QueryResult");
+
+                total = String(Number(nodeList.item(0).selectSingleNode("TotalReturns").text));
+
+                if (total == "0") {
+                    Radiology.MessageBox("No Query Results", MB_ICONWARNING);
+                }
+                else {
+                    var nodeList = doc.getElementsByTagName("Exam");
+
+                    patientname.value = nodeList.item(0).selectSingleNode("x00100010").text;
+                    patientid.value = nodeList.item(0).selectSingleNode("x00100020").text;
+                    accession.value = nodeList.item(0).selectSingleNode("x00080050").text;
+                    modality.value = nodeList.item(0).selectSingleNode("x00080060").text;
+                    bodypart.value = nodeList.item(0).selectSingleNode("x00180015").text;
+                }
+            }
+        }
+
+        //*******************************************
+
+    </script>
+</head>
+<body bottommargin="0" bgcolor="#d4d4d4" leftmargin="0" topmargin="0" scroll="no" onload="OnLoad()"
+      rightmargin="0" onunload="OnUnload()">
+    <object id="xmldso" height="0" width="0" classid="clsid:550dda30-0541-11d2-9ca9-0060b0ec3d39"></object>
+    <h1></h1>
+    <p>
+        <table width="50">
+            <tr>
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td align="center" colspan="2">
+                                <h1>Study Lookup</h1>
+                        </tr>
+                    </table>
+                    <table cellspacing="10">
+                        <tr>
+                            <td>SUID:</td>
+                            <td><input id="studyuid" name="studyuid" type="text" size="60"></td>
+                            <td><input onclick="OnQuery()" type="button" value=" Search " name="querybtn"></td>
+                            <td><input onclick="OnOpen()" type="button" value="  Open  " name="openbtn"></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <table>
+                        <tr>
+                            <td align="center" colspan="2">
+                                <h3>RESULTS:</h3>
+                        </tr>
+                    </table>
+                    <table cellspacing="10">
+                        <tr>
+                            <td align="right">Patient Name:</td>
+                            <td><input readonly style="background-color:#c0c0c0" id="patientname" type="text" size="40"></td>
+                        <tr>
+                            <td align="right">Patient ID:</td>
+                            <td><input readonly style="background-color:#c0c0c0" id="patientid" type="text" size="30"></td>
+                        </tr>
+                        <tr>
+                            <td align="right">Accession:</td>
+                            <td><input readonly style="background-color:#c0c0c0" id="accession" type="text" size="30"></td>
+                        </tr>
+                        <tr>
+                            <td align="right">Modality:</td>
+                            <td><input readonly style="background-color:#c0c0c0" id="modality" type="text" size="5"></td>
+                        </tr>
+                        <tr>
+                            <td align="right">Body Part:</td>
+                            <td><input readonly style="background-color:#c0c0c0" id="bodypart" type="text" size="20"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </p>
+</body>
+</html>

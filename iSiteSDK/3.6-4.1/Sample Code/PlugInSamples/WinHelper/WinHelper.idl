@@ -1,0 +1,42 @@
+// WinHelper.idl : IDL source for WinHelper.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (WinHelper.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+	[
+		object,
+		uuid(2EB8C9F9-4E3E-4707-A2A9-E4A112B3E250),
+		dual,
+		helpstring("IHelper Interface"),
+		pointer_default(unique)
+	]
+	interface IHelper : IDispatch
+	{
+		[id(1), helpstring("method CreateProgressDlg")] HRESULT CreateProgressDlg([in] int nLower, [in] int nUpper);
+		[id(2), helpstring("method UpdateProgress")] HRESULT UpdateProgress([in] int nPos, [out, retval] VARIANT_BOOL *pSuccess);
+		[id(3), helpstring("method DestroyProgressDlg")] HRESULT DestroyProgressDlg();
+		[id(4), helpstring("method BrowseForFolder")] HRESULT BrowseForFolder([out, retval] BSTR * Folder);
+	};
+
+[
+	uuid(A9C940A5-6E3E-44BA-A6AB-49ADAAD8F195),
+	version(1.0),
+	helpstring("WinHelper 1.0 Type Library")
+]
+library WINHELPERLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		uuid(43EACD67-F4C7-43A1-B922-2718B7B3B840),
+		helpstring("Helper Class")
+	]
+	coclass Helper
+	{
+		[default] interface IHelper;
+	};
+};

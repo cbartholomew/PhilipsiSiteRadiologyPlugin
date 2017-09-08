@@ -1,0 +1,50 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: WinHelper - Win32 Release MinDependency--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x409 /fo"ReleaseMinDependency/WinHelper.res" /d "NDEBUG" /d "_AFXDLL" "D:\depot\projects\StentorSoft3.5\Products\Client\iSiteSDK3.5\PlugInSamples\WinHelper\WinHelper.rc"" 
+Creating temporary file "C:\DOCUME~1\abarulic\LOCALS~1\Temp\RSP8A6.tmp" with contents
+[
+/nologo /MD /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /D "_ATL_STATIC_REGISTRY" /Fp"ReleaseMinDependency/WinHelper.pch" /Yu"stdafx.h" /Fo"ReleaseMinDependency/" /Fd"ReleaseMinDependency/" /FD /c 
+"D:\depot\projects\StentorSoft3.5\Products\Client\iSiteSDK3.5\PlugInSamples\WinHelper\Helper.cpp"
+"D:\depot\projects\StentorSoft3.5\Products\Client\iSiteSDK3.5\PlugInSamples\WinHelper\WinHelper.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\abarulic\LOCALS~1\Temp\RSP8A6.tmp" 
+Creating temporary file "C:\DOCUME~1\abarulic\LOCALS~1\Temp\RSP8A7.tmp" with contents
+[
+/nologo /subsystem:windows /dll /incremental:no /pdb:"ReleaseMinDependency/WinHelper.pdb" /machine:I386 /def:".\WinHelper.def" /out:"ReleaseMinDependency/WinHelper.dll" /implib:"ReleaseMinDependency/WinHelper.lib" 
+.\ReleaseMinDependency\Helper.obj
+.\ReleaseMinDependency\ProgressDlg.obj
+.\ReleaseMinDependency\StdAfx.obj
+.\ReleaseMinDependency\WinHelper.obj
+.\ReleaseMinDependency\WinHelper.res
+]
+Creating command line "link.exe @C:\DOCUME~1\abarulic\LOCALS~1\Temp\RSP8A7.tmp"
+Creating temporary file "C:\DOCUME~1\abarulic\LOCALS~1\Temp\RSP8A8.bat" with contents
+[
+@echo off
+regsvr32 /s /c ".\ReleaseMinDependency\WinHelper.dll"
+echo regsvr32 exec. time > ".\ReleaseMinDependency\regsvr32.trg"
+]
+Creating command line "C:\DOCUME~1\abarulic\LOCALS~1\Temp\RSP8A8.bat"
+Compiling resources...
+Compiling...
+Helper.cpp
+WinHelper.cpp
+Generating Code...
+Linking...
+   Creating library ReleaseMinDependency/WinHelper.lib and object ReleaseMinDependency/WinHelper.exp
+<h3>Output Window</h3>
+Performing registration
+
+
+
+<h3>Results</h3>
+WinHelper.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

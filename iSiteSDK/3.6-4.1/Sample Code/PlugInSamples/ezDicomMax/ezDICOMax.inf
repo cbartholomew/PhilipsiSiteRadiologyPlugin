@@ -1,0 +1,9 @@
+;Delphi-generated INF file for ezDICOMax.ocx
+[Add.Code]
+ezDICOMax.ocx=ezDICOMax.ocx
+
+[ezDICOMax.ocx]
+file=ezDICOMax.ocx
+clsid={9A2C58CF-4A4B-48BF-B3C9-0756F0F2FA9B}
+RegisterServer=yes
+FileVersion=1,0,0,0

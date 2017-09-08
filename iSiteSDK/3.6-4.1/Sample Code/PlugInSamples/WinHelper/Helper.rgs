@@ -1,0 +1,26 @@
+HKCR
+{
+	WinHelper.Helper.1 = s 'Helper Class'
+	{
+		CLSID = s '{43EACD67-F4C7-43A1-B922-2718B7B3B840}'
+	}
+	WinHelper.Helper = s 'Helper Class'
+	{
+		CLSID = s '{43EACD67-F4C7-43A1-B922-2718B7B3B840}'
+		CurVer = s 'WinHelper.Helper.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {43EACD67-F4C7-43A1-B922-2718B7B3B840} = s 'Helper Class'
+		{
+			ProgID = s 'WinHelper.Helper.1'
+			VersionIndependentProgID = s 'WinHelper.Helper'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{A9C940A5-6E3E-44BA-A6AB-49ADAAD8F195}'
+		}
+	}
+}

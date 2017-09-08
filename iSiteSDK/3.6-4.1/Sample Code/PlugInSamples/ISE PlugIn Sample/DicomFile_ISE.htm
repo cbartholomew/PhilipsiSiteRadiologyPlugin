@@ -1,0 +1,317 @@
+<!-- saved from url=(0014)about:internet -->
+<HTML>
+<HEAD>
+<META NAME="GENERATOR" Content="Microsoft Visual Studio 6.0">
+<title>Dicom File Write Plug In - Enterprise</title>
+
+<!-- 
+     We're including LogWriter.js to show how to use LogWriter.dll.
+     LogWriter.js contains convenient wrapper functions for producing
+     a log file for a plugin.
+-->
+<SCRIPT language="javascript" src="LogWriter.js"></SCRIPT>
+
+<!-- 
+     We're including ISESamplePrefsMachine.js to show how to use a custom
+     iSite Preference Page programatically.  This plugin will use a 
+     Machine Preference page to get the LogWriter settings.  The same 
+     concepts also apply to User Preference pages and System Preference 
+     pages.
+-->
+<SCRIPT language="javascript" src="ISESamplePrefsMachine.js"></SCRIPT>
+
+
+
+<script language="javascript">
+
+var MB_OK                    = 0x00000000;
+var MB_OKCANCEL              = 0x00000001;
+var MB_ABORTRETRYIGNORE      = 0x00000002;
+var MB_YESNOCANCEL           = 0x00000003;
+var MB_YESNO                 = 0x00000004;
+var MB_RETRYCANCEL           = 0x00000005;
+var MB_ICONHAND              = 0x00000010;
+var MB_ICONQUESTION          = 0x00000020;
+var MB_ICONEXCLAMATION       = 0x00000030;
+var MB_ICONASTERISK          = 0x00000040;
+var MB_ICONWARNING           = MB_ICONEXCLAMATION;
+var MB_ICONERROR             = MB_ICONHAND;
+var MB_ICONINFORMATION       = MB_ICONASTERISK;
+var MB_ICONSTOP              = MB_ICONHAND;
+var SAMPLE_PREFS_FILE_USER   = "ISESamplePrefsUser.htm";
+var SAMPLE_PREFS_FILE_SYSTEM = "ISESamplePrefsSystem.htm";
+var SAMPLE_PREFS_FILE_MACHINE = "ISESamplePrefsMachine.htm";
+var SAMPLE_PREFS_NAME        = "Sample ISE Plug In Preferences";
+
+
+// MessageBox return codes
+var IDOK          =  1;
+var IDCANCEL      =  2;
+var IDABORT       =  3;
+var IDRETRY       =  4;
+var IDIGNORE      =  5;
+var IDYES         =  6;
+var IDNO          =  7;
+var IDCLOSE       =  8;
+
+function OnLoad()
+{
+  window.status = "Copyright' + String.fromCharCode(169) + ' 2000 - 2005 Philips Inc.";
+	
+	//set up our plugin logger if our Enable Logging preference is true from Machine Preferences
+	GetSamplePreferences();
+	
+	//set the debug level [1-5]
+	MasterDebugLevel = 3;
+	
+	//turn logging on or off based on preferences
+	if (m_Enable_Logging == 0)
+		LogEnabled = false;
+	else
+		LogEnabled = true;
+		
+	if (LogEnabled)
+	{
+		LogPrefix = m_Log_Prefix;
+		LogDir = m_Log_Directory;
+		LogOptions = m_Log_Options;	
+		InitializeLogger();	
+	}
+
+  // Add menu items
+  iSiteEnterprise.AddViewMenuItem("Export Single Image to DICOM File");
+  iSiteEnterprise.AddViewMenuItem("Export Image Series to DICOM Files");
+  AddPrefPage();
+}
+
+function OnUnload()
+{
+  LogFunction("OnUnload", "");
+  
+  // Let's remove what we put in.
+  iSiteEnterprise.RemoveViewMenuItem("Export Single Image to DICOM File");
+  iSiteEnterprise.RemoveViewMenuItem("Export Image Series to DICOM Files");
+  // Remove Preference page
+  iSiteEnterprise.AddPreferencePage(SAMPLE_PREFS_NAME, "", "User");
+  iSiteEnterprise.AddPreferencePage(SAMPLE_PREFS_NAME, "", "System");
+  iSiteEnterprise.AddPreferencePage(SAMPLE_PREFS_NAME, "", "Machine");
+}
+
+function AddPrefPage()
+{
+    LogFunction("AddPrefPage", "");
+    
+    // use the prefs file located in this same location
+    var thispath = document.location.toString();
+    thispath = thispath.toLowerCase();
+    var locate = thispath.indexOf("dicomfile_ise.htm");
+    if (locate > -1)
+    {
+    // Pages are added for User, Machine and System, but your plug in should add only what is required
+      var path = thispath.substring(0, locate);
+      var prefpath = path + SAMPLE_PREFS_FILE_USER;
+      iSiteEnterprise.AddPreferencePage(SAMPLE_PREFS_NAME, prefpath, "User");
+      var prefpath = path + SAMPLE_PREFS_FILE_SYSTEM;
+      iSiteEnterprise.AddPreferencePage(SAMPLE_PREFS_NAME, prefpath, "System");
+      var prefpath = path + SAMPLE_PREFS_FILE_MACHINE;
+      iSiteEnterprise.AddPreferencePage(SAMPLE_PREFS_NAME, prefpath, "Machine");
+    }
+    else
+    {
+    	DebugMessage(2, "AddPrefPage", "Unable to locate dicomfile_ise.htm");
+    }
+}
+
+
+function WriteImageDICOM(WndID, ImageUIDs)
+{
+  LogFunction("WriteImageDICOM", "WndID=" + WndID + ", ImageUIDs="+ImageUIDs);
+  
+  var Folder = WinHelper.BrowseForFolder();
+	
+	if (Folder != "")
+	{
+		WinHelper.CreateProgressDlg(1, ImageUIDs.length);
+		var i;
+		for (i=0;i<ImageUIDs.length;i++)
+		{
+      // false means this was cancelled.
+      if (WinHelper.UpdateProgress(i+1))
+      {			
+      	var dcmFile = Folder + "\\" + ImageUIDs[i] + ".dcm";
+				var rslt = iSiteEnterprise.WriteDICOMInstance(WndID, ImageUIDs[i], dcmFile);
+				if (rslt != true)
+				{
+					alert("WriteDICOMInstance failed.\nError: "+ iSiteNonVisual.GetLastErrorCode());
+					break;
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+		WinHelper.DestroyProgressDlg();
+	}
+	else
+	{
+		DebugMessage(3, "WriteImageDICOM", "Empty string returned from WinHelper.BrowseForFolder()");
+	}
+}
+
+function GetImageUIDs(WndID)
+{
+	LogFunction("GetImageUIDs", "WndID="+WndID);
+	
+  var WndInfo = iSiteEnterprise.GetStaticWindowInfo(WndID);
+  var ImageUIDs;
+
+  ImageUIDs = new Array();
+  ImageUIDs.length = 0;
+    
+  if (WndInfo != "")
+  {
+    var doc = xmldso.XMLDocument;
+    doc.loadXML(WndInfo);
+
+    var nodeList = doc.getElementsByTagName("Window");
+    var ImageList = nodeList.item(0).getElementsByTagName("ImageUIDs");
+    var idList = ImageList.item(0).getElementsByTagName("UID");
+
+    ImageUIDs.length = idList.length;
+  
+    var i=0;
+    for (i=0; i < idList.length; i++)
+    {
+      var ID = idList.item(i).text;
+      ImageUIDs[i] = ID;        
+    }
+  }
+	else
+	{
+		DebugMessage(3, "GetImageUIDs", "WndInfo is empty string.");
+	}  
+  
+  return ImageUIDs;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Functions called from event handlers below
+//////////////////////////////////////////////////////////////////////////////////////
+
+// This function is called by the javascript that traps the event for the 
+// image view menu item selection.
+function OnViewEvent(menuitem, ContextRecord)
+{
+   LogFunction("OnViewEvent", "menuitem=" + menuitem + ", ContextRecord=" + ContextRecord);
+   
+   // if we got a context record then parse the values from the XML 
+   // and fill in the screen.
+   if (ContextRecord != "")
+   {
+      var doc = xmldso.XMLDocument;
+      doc.loadXML(ContextRecord);
+
+      var nodeList = doc.getElementsByTagName("WindowInfo");
+
+      var WndID    = nodeList.item(0).selectSingleNode("WindowID").text;
+
+      if (menuitem == "Export Single Image to DICOM File")
+      {
+	      	var ID = nodeList.item(0).selectSingleNode("x00080018").text;
+	        var ImageUIDs = new Array();
+	        ImageUIDs.length = 1;
+	        ImageUIDs[0] = ID;
+	
+	        WriteImageDICOM(WndID, ImageUIDs);
+      }
+      if (menuitem == "Export Image Series to DICOM Files")
+      {
+	        var ImageUIDs = GetImageUIDs(WndID);
+	        WriteImageDICOM(WndID, ImageUIDs);
+      }
+   }
+   else
+   {
+     iSiteEnterprise.MessageBox("OnViewEvent Failed", MB_OK|MB_ICONHAND);
+     DebugMessage(3, "OnViewEvent", "ContextRecord is empty string.");
+   }
+}
+
+// Need to initialize and turn on LogWriter if user turned it on through Machine Preference page.
+function OnPreferencesApplyEvent()
+{
+	LogFunction("OnPreferencesApplyEvent", "");
+	
+	GetSamplePreferences();
+	if (m_Enable_Logging == 0)
+		LogEnabled = false;
+	else
+		LogEnabled = true;
+		
+	if (LogEnabled)
+	{
+		LogPrefix = m_Log_Prefix;
+		LogDir = m_Log_Directory;
+		LogOptions = m_Log_Options;	
+		//Not a problem if LogWriter is already initialized.
+		InitializeLogger();	
+	}
+
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+// iSiteEnterprise Event Handlers
+//////////////////////////////////////////////////////////////////////////////////////
+function iSiteEnterprise_EventViewMenuSelected(menuitem, contextRecord)
+{
+   LogEvent("EventViewMenuSelected", "menuitem="+menuitem+", contextRecord="+contextRecord);
+   OnViewEvent(menuitem, contextRecord);
+}
+
+function iSiteEnterprise_EventPreferencesApply(PrefPageName, PrefType)
+{
+	if ((PrefPageName == SAMPLE_PREFS_NAME) && (PrefType == SAMPLE_PREFS_TYPE))
+  {
+		LogEvent("EventPreferencesApply", "PrefPageName="+PrefPageName+", PrefType="+PrefType);
+		//setTimeout used to make sure ISESamplePrefsMachine.htm has had a chance to set the preferences.
+		setTimeout("OnPreferencesApplyEvent()", 125);
+	}
+}
+</SCRIPT>
+
+</head>
+
+<body onload="OnLoad()" onunload="OnUnload()" scroll="no" leftmargin=0 topmargin=0 BOTTOMMARGIN=0 RIGHTMARGIN=0>
+<H1>iSite Sample PlugIn
+
+<!--
+     Many iSite methods and events use XML formatted data as input or output parameters.
+     The xmldso object is included to parse XML for elements used in the plugin.
+     Review the GetImageUIDs function in this plugin, the ISESamplePrefsMachine.js file, 
+     as well as many of the other plugins included in the SDK for proper methods of retrieving
+     and manipulating XML data with this object.
+-->
+<OBJECT id="xmldso" height=0 width=0 
+classid=clsid:550dda30-0541-11d2-9ca9-0060b0ec3d39></OBJECT></H1>
+<P>
+
+<!--
+    WinHelper.dll contains methods for creating, updating, and deleting a progress bar window
+    as well as a folder browser dialog for selecting a folder on the local client computer.
+-->
+<OBJECT id="WinHelper" 
+classid=clsid:43EACD67-F4C7-43A1-B922-2718B7B3B840 >
+</OBJECT>
+
+<!-- See LogWriter.js for a description of this object -->
+<OBJECT id="LogWriter"
+classid=clsid:8848DC58-BEDD-4D31-82A6-0D3765881F5C > 
+</OBJECT>
+
+</P>
+
+</body>
+</HTML>

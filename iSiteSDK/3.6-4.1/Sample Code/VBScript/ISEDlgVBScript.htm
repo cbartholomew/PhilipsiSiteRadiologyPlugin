@@ -1,0 +1,60 @@
+<!-- saved from url=(0014)about:internet -->
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>iSite Enterprise</title>
+
+<!-- 
+
+This is part of the iSite Enterprise Sample and should not be run on its own.
+Please see ISESampleVBScript.htm for details of the sample.
+
+This page is shown in a dialog from the ISESampleVBScript.htm 
+
+--> 
+
+<SCRIPT LANGUAGE="VBScript">
+<!--
+Dim examID
+
+Sub doInit()
+	examID = ""
+
+  iSite.Options = "DisableAutoLogout,HideFolders,HideLogoutButton,HideCloseTabButton,DisablePreferences,DisableClinicalExamNotes"
+
+	' Init the iSite Enterprise control
+	If iSite.Initialize(window.dialogArguments.iSiteNonVisualCtrl) Then
+		' find the exam id
+		examID = window.dialogArguments.iSiteNonVisualCtrl.FindExam(window.dialogArguments.acc.value, window.dialogArguments.pid.value, window.dialogArguments.org.value)
+
+		If examID <> "" Then
+			' open the exam, 1 means to make the exam visible in the rack
+			call iSite.OpenCanvasPage(examID, "", 1, 0, 1)
+		Else
+			MsgBox "Error locating exam."
+		End If
+	Else
+		MsgBox "Error Initializing iSite Enterprise Control"
+	End If
+End Sub
+//-->
+</script>
+
+</head>
+
+<body onload="doInit">
+<!-- Refer to MSDN article http://msdn2.microsoft.com/en-us/library/ms537508.aspx to understand the div below -->
+<div id="VIS_CONTROL">
+  <script src="iSiteControl.js" language="JScript"></script>
+  <script language="JScript">
+  	InjectVisualControl("clsid:F21CDD6E-3FE2-4d78-8709-83D5D939B7B2", "VIS_CONTROL");   
+	</script> 
+</div>	
+	
+</body>
+
+</html>
+
+
+
